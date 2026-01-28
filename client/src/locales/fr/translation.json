@@ -1,0 +1,122 @@
+{
+    "navbar": {
+        "findWork": "Trouver du Travail",
+        "hireTalent": "Embaucher",
+        "categories": "Catégories",
+        "adminPanel": "Panneau Admin",
+        "dashboard": "Tableau de Bord",
+        "logout": "Se Déconnecter",
+        "adminLogin": "Connexion Admin",
+        "login": "Se Connecter",
+        "signup": "S'inscrire"
+    },
+    "home": {
+        "heroTitle": "Trouvez le",
+        "heroProfessional": "Professionnel",
+        "heroSubtitle": "Parfait pour Vos Besoins",
+        "heroDesc": "Connectez-vous avec des experts les mieux notés, des bricoleurs qualifiés aux consultants spécialisés. Travail de qualité, garanti.",
+        "searchPlaceholder": "Quel service recherchez-vous ?",
+        "locationPlaceholder": "Code Postal ou Ville",
+        "searchButton": "Rechercher",
+        "stats": {
+            "verified": "Professionnels Vérifiés",
+            "verifiedDesc": "Processus de vérification rigoureux pour votre sécurité.",
+            "quality": "Qualité Supérieure",
+            "qualityDesc": "Engagez des talents avec des antécédents prouvés.",
+            "matching": "Correspondance Intelligente",
+            "matchingDesc": "Notre IA trouve la correspondance parfaite instantanément."
+        },
+        "categoriesTitle": "Parcourir les Catégories",
+        "categoriesDesc": "Des professionnels détaillés pour chaque type de projet.",
+        "viewAll": "Voir Tout",
+        "viewProfessionals": "Voir les professionnels",
+        "ctaTitle": "Prêt à faire avancer les choses ?",
+        "ctaDesc": "Rejoignez des milliers d'utilisateurs qui économisent déjà du temps et de l'argent avec KoraFix.",
+        "getStarted": "Commencer",
+        "browseJobs": "Parcourir les Emplois"
+    },
+    "categories": {
+        "homeServices": "Services à Domicile",
+        "tech": "IT & Tech",
+        "creative": "Créatif",
+        "construction": "Construction",
+        "mechanical": "Mécanique",
+        "office": "Bureau",
+        "health": "Santé",
+        "education": "Éducation",
+        "adminAssistant": "Assistant Administratif",
+        "webDeveloper": "Développeur Web",
+        "plumber": "Plombier",
+        "electrician": "Électricien",
+        "carpenter": "Charpentier",
+        "mechanic": "Mécanicien",
+        "graphicDesigner": "Graphiste",
+        "houseHelper": "Aide Ménagère"
+    },
+    "categoriesPage": {
+        "title": "Explorer les Catégories",
+        "subtitle": "Découvrez des professionnels qualifiés dans divers secteurs prêts à vous aider pour votre prochain projet.",
+        "browseExperts": "Parcourir les Experts",
+        "loading": "Chargement..."
+    },
+    "dashboard": {
+        "welcome": "Bon retour, {{name}} !",
+        "accountType": "Compte {{role}}",
+        "quickActions": "Actions Rapides",
+        "detailedCategories": "Catégories Détaillées",
+        "browseCategoriesDesc": "Parcourir les professionnels par catégories spécifiques.",
+        "postJob": "Publier un Emploi",
+        "postJobDesc": "Créer une nouvelle demande de service pour trouver des talents."
+    },
+    "postJob": {
+        "title": "Publier un Nouvel Emploi",
+        "subtitle": "Dites-nous ce que vous devez faire",
+        "jobTitle": "Titre de l'Emploi",
+        "description": "Description",
+        "category": "Catégorie",
+        "selectCategory": "Sélectionner une catégorie",
+        "location": "Emplacement",
+        "phone": "Numéro de Téléphone",
+        "budget": "Budget (RWF)",
+        "submit": "Publier l'Emploi",
+        "success": "Emploi publié avec succès !",
+        "error": "Échec de la publication de l'emploi. Veuillez réessayer."
+    },
+    "jobs": {
+        "title": "Emplois Disponibles",
+        "subtitle": "Explorez les opportunités ouvertes et trouvez votre prochain projet.",
+        "noJobs": "Aucun emploi trouvé",
+        "checkBack": "Revenez plus tard pour de nouvelles opportunités.",
+        "general": "Général",
+        "posted": "Publié le",
+        "applyExclamation": "Postuler Maintenant !"
+    },
+    "admin": {
+        "dashboard": "Tableau de Bord Admin",
+        "jobSeekers": "Demandeurs d'Emploi (Travailleurs)",
+        "noJobSeekers": "Aucun demandeur d'emploi trouvé.",
+        "serviceRequests": "Demandes de Service",
+        "noServiceRequests": "Aucune demande de service trouvée.",
+        "name": "Nom",
+        "phone": "Téléphone",
+        "email": "Email",
+        "jobService": "Emploi/Service",
+        "clientName": "Nom du Client"
+    },
+    "auth": {
+        "signInTitle": "Connectez-vous à votre compte",
+        "createAccount": "créer un nouveau compte",
+        "or": "Ou",
+        "emailLabel": "Adresse Email",
+        "passwordLabel": "Mot de passe",
+        "signInButton": "Se connecter",
+        "createAccountTitle": "Créez votre compte",
+        "haveAccount": "Vous avez déjà un compte ?",
+        "signInLink": "Se connecter",
+        "fullName": "Nom Complet",
+        "iAmA": "Je suis un...",
+        "clientRole": "Client",
+        "workerRole": "Travailleur",
+        "createAccountButton": "Créer un Compte"
+    }
+}

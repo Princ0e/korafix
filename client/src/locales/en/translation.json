@@ -1,0 +1,122 @@
+{
+    "navbar": {
+        "findWork": "Find Work",
+        "hireTalent": "Hire Talent",
+        "categories": "Categories",
+        "adminPanel": "Admin Panel",
+        "dashboard": "Dashboard",
+        "logout": "Logout",
+        "adminLogin": "Admin Login",
+        "login": "Log In",
+        "signup": "Sign Up"
+    },
+    "home": {
+        "heroTitle": "Find the Perfect",
+        "heroProfessional": "Professional",
+        "heroSubtitle": "for Your Needs",
+        "heroDesc": "Connect with top-rated experts, from skilled handymen to specialized consultants. Quality work, guaranteed.",
+        "searchPlaceholder": "What service are you looking for?",
+        "locationPlaceholder": "Zip Code or City",
+        "searchButton": "Search",
+        "stats": {
+            "verified": "Verified Professionals",
+            "verifiedDesc": "Rigorous vetting process for your safety.",
+            "quality": "Top Rated Quality",
+            "qualityDesc": "Hire talent with proven track records.",
+            "matching": "Smart Matching",
+            "matchingDesc": "Our AI finds the perfect fit instantly."
+        },
+        "categoriesTitle": "Browse Categories",
+        "categoriesDesc": "Detailed professionals for every project type.",
+        "viewAll": "View All",
+        "viewProfessionals": "View professionals",
+        "ctaTitle": "Ready to get things done?",
+        "ctaDesc": "Join thousands of users who are already saving time and money with KoraFix.",
+        "getStarted": "Get Started",
+        "browseJobs": "Browse Jobs"
+    },
+    "categories": {
+        "homeServices": "Home Services",
+        "tech": "IT & Tech",
+        "creative": "Creative",
+        "construction": "Construction",
+        "mechanical": "Mechanical",
+        "office": "Office",
+        "health": "Health",
+        "education": "Education",
+        "adminAssistant": "Admin Assistant",
+        "webDeveloper": "Web Developer",
+        "plumber": "Plumber",
+        "electrician": "Electrician",
+        "carpenter": "Carpenter",
+        "mechanic": "Mechanic",
+        "graphicDesigner": "Graphic Designer",
+        "houseHelper": "House Helper"
+    },
+    "categoriesPage": {
+        "title": "Explore Categories",
+        "subtitle": "Discover skilled professionals across various industries ready to help with your next project.",
+        "browseExperts": "Browse Experts",
+        "loading": "Loading..."
+    },
+    "dashboard": {
+        "welcome": "Welcome back, {{name}}!",
+        "accountType": "{{role}} Account",
+        "quickActions": "Quick Actions",
+        "detailedCategories": "Detailed Categories",
+        "browseCategoriesDesc": "Browse professionals by specific categories.",
+        "postJob": "Post a Job",
+        "postJobDesc": "Create a new service request to find talent."
+    },
+    "postJob": {
+        "title": "Post a New Job",
+        "subtitle": "Tell us what you need done",
+        "jobTitle": "Job Title",
+        "description": "Description",
+        "category": "Category",
+        "selectCategory": "Select a category",
+        "location": "Location",
+        "phone": "Phone Number",
+        "budget": "Budget (RWF)",
+        "submit": "Post Job",
+        "success": "Job posted successfully!",
+        "error": "Failed to post job. Please try again."
+    },
+    "jobs": {
+        "title": "Available Jobs",
+        "subtitle": "Explore open opportunities and find your next project.",
+        "noJobs": "No jobs found",
+        "checkBack": "Check back later for new opportunities.",
+        "general": "General",
+        "posted": "Posted",
+        "applyExclamation": "Apply Now!"
+    },
+    "admin": {
+        "dashboard": "Admin Dashboard",
+        "jobSeekers": "Job Seekers (Workers)",
+        "noJobSeekers": "No job seekers found.",
+        "serviceRequests": "Service Requests",
+        "noServiceRequests": "No service requests found.",
+        "name": "Name",
+        "phone": "Phone",
+        "email": "Email",
+        "jobService": "Job/Service",
+        "clientName": "Client Name"
+    },
+    "auth": {
+        "signInTitle": "Sign in to your account",
+        "createAccount": "create a new account",
+        "or": "Or",
+        "emailLabel": "Email address",
+        "passwordLabel": "Password",
+        "signInButton": "Sign in",
+        "createAccountTitle": "Create your account",
+        "haveAccount": "Already have an account?",
+        "signInLink": "Sign in",
+        "fullName": "Full Name",
+        "iAmA": "I am a...",
+        "clientRole": "Client",
+        "workerRole": "Worker",
+        "createAccountButton": "Create Account"
+    }
+}

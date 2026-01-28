@@ -1,0 +1,122 @@
+{
+    "navbar": {
+        "findWork": "Shaka Akazi",
+        "hireTalent": "Shaka Umukozi",
+        "categories": "Ibyiciro",
+        "adminPanel": "Admin Panel",
+        "dashboard": "Dashboard",
+        "logout": "Sohoka",
+        "adminLogin": "Kwinjira nka Admin",
+        "login": "Injira",
+        "signup": "Iyandikishe"
+    },
+    "home": {
+        "heroTitle": "Shaka Impuguke",
+        "heroProfessional": "Kabuhariwe",
+        "heroSubtitle": "Kubyo Ukeneye",
+        "heroDesc": "ihurize n' impuguke kabuhariwe, kuva kubakora imirimo yintoki kugeza kubajyanama bihariye. Akazi keza kanoze.",
+        "searchPlaceholder": "Ushaka iyihe serivisi?",
+        "locationPlaceholder": "Kode ya Zip cyangwa Umujyi",
+        "searchButton": "Shaka",
+        "stats": {
+            "verified": "Abakozi Bagenzuwe",
+            "verifiedDesc": "Ubugenzuzi bukomeye bwumutekano wawe.",
+            "quality": "Ubwiza Bwo Hejuru",
+            "qualityDesc": "Koresha abafite ubunararibonye.",
+            "matching": " guhuza neza",
+            "matchingDesc": "Tekinike yacu iguhuza nutunganye ako kanya."
+        },
+        "categoriesTitle": "Reba Ibyiciro",
+        "categoriesDesc": "Abanyamwuga muri buri bwoko bw'umushinga.",
+        "viewAll": "Reba Byose",
+        "viewProfessionals": "Reba abakozi",
+        "ctaTitle": "Witeguye gukora?",
+        "ctaDesc": "Iyunge ku bihumbi by'abakoresha bamaze kuzigama igihe n'amafaranga na KoraFix.",
+        "getStarted": "Tangira",
+        "browseJobs": "Reba Imirimo"
+    },
+    "categories": {
+        "homeServices": "Serivisi zo mu Rugo",
+        "tech": "Ikoranabuhanga",
+        "creative": "Ubuhanzi",
+        "construction": "Ubwubatsi",
+        "mechanical": "Mekanike",
+        "office": "Ibiro",
+        "health": "Ubuzima",
+        "education": "Uburezi",
+        "adminAssistant": "Umufasha mu Biro",
+        "webDeveloper": "Umunyamwuga wa Web",
+        "plumber": "Umukanishi w'Amazi",
+        "electrician": "Amashanyarazi",
+        "carpenter": "Umubaji",
+        "mechanic": "Mekanike",
+        "graphicDesigner": "Umuhanzi w'Ibishushanyo",
+        "houseHelper": "Umukozi wo mu Rugo"
+    },
+    "categoriesPage": {
+        "title": "Reba Ibyiciro",
+        "subtitle": "Vumbura abanyamwuga bafite ubumenyi mu nganda zitandukanye biteguye kugufasha mu mushinga wawe utaha.",
+        "browseExperts": "Reba Impuguke",
+        "loading": "Birimo gukorwa..."
+    },
+    "dashboard": {
+        "welcome": "Murakaza neza, {{name}}!",
+        "accountType": "Konti ya {{role}}",
+        "quickActions": "Ibikorwa byihuse",
+        "detailedCategories": "Ibyiciro Birambuye",
+        "browseCategoriesDesc": "Shakisha abanyamwuga ukurikije ibyiciro.",
+        "postJob": "Tanga Akazi",
+        "postJobDesc": "Kora ubusabe bushya bwa serivisi kugirango ubone umukozi."
+    },
+    "postJob": {
+        "title": "Tanga Akazi Gashya",
+        "subtitle": "Tubwire ibyo ukeneye gukorerwa",
+        "jobTitle": "Umutwe w'Akazi",
+        "description": "Ibisobanuro",
+        "category": "Icyiciro",
+        "selectCategory": "Hitamo icyiciro",
+        "location": "Aho biherereye",
+        "phone": "Nimero ya Telefone",
+        "budget": "Ingengo y'imari (RWF)",
+        "submit": "Ohereza Akazi",
+        "success": "Akazi katanzwe neza!",
+        "error": "Kootereza akazi byananiye. Ongera ugerageze."
+    },
+    "jobs": {
+        "title": "Imirimo Ihari",
+        "subtitle": "Shakisha amahirwe ahari ubone umushinga wawe utaha.",
+        "noJobs": "Nta mirimo yabonetse",
+        "checkBack": "Garuka myuma urebe amahirwe mashya.",
+        "general": "Rusange",
+        "posted": "Byashyizweho",
+        "applyExclamation": "Saba Akazi Nonaha!"
+    },
+    "admin": {
+        "dashboard": "Admin Dashboard",
+        "jobSeekers": "Abashaka Akazi (Abakozi)",
+        "noJobSeekers": "Nta bashaka akazi babonetse.",
+        "serviceRequests": "Ubusabe bwa Serivisi",
+        "noServiceRequests": "Nta busabe bwa serivisi bwabonetse.",
+        "name": "Izina",
+        "phone": "Telefone",
+        "email": "Imeri",
+        "jobService": "Akazi/Serivisi",
+        "clientName": "Izina ry'Umukiliya"
+    },
+    "auth": {
+        "signInTitle": "Injira muri konti yawe",
+        "createAccount": "fungura konti nshya",
+        "or": "Cyangwa",
+        "emailLabel": "Aderesi ya Imeri",
+        "passwordLabel": "Ijambo ry'ibanga",
+        "signInButton": "Injira",
+        "createAccountTitle": "Fungura konti yawe",
+        "haveAccount": "Ufite konti?",
+        "signInLink": "Injira",
+        "fullName": "Amazina Yose",
+        "iAmA": "Ndi...",
+        "clientRole": "Umukiliya",
+        "workerRole": "Umukozi",
+        "createAccountButton": "Fungura Konti"
+    }
+}
