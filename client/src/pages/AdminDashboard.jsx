@@ -32,8 +32,8 @@ const AdminDashboard = () => {
                     },
                 };
 
-                const workersRes = await axios.get('http://localhost:5000/api/admin/job-seekers', config);
-                const jobsRes = await axios.get('http://localhost:5000/api/admin/service-seekers', config);
+                const workersRes = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/admin/job-seekers`, config);
+                const jobsRes = await axios.get(`${import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}/admin/service-seekers`, config);
 
                 setJobSeekers(workersRes.data);
                 setServiceSeekers(jobsRes.data);
