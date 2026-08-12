@@ -3,12 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AuthContext from '../context/AuthContext';
 import api from '../api/axios';
-import { Briefcase, MapPin, DollarSign, FileText, List } from 'lucide-react';
+import { Briefcase, MapPin, DollarSign, FileText, List, ArrowRight, User, Star } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const PostJob = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { user } = useContext(AuthContext);
+    const { user, loading: authLoading } = useContext(AuthContext);
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -18,18 +19,28 @@ const PostJob = () => {
         budget: ''
     });
     const [categories, setCategories] = useState([]);
+    const [workers, setWorkers] = useState([]);
+    const [loadingWorkers, setLoadingWorkers] = useState(true);
     const [error, setError] = useState('');
+    const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        const fetchCategories = async () => {
+        const fetchData = async () => {
             try {
-                const { data } = await api.get('/categories');
-                setCategories(data);
+                const [catRes, workerRes] = await Promise.all([
+                    api.get('/categories'),
+                    api.get('/users')
+                ]);
+                setCategories(catRes.data);
+                setWorkers(workerRes.data.slice(0, 3)); // Show top 3
             } catch (err) {
-                console.error('Failed to fetch categories', err);
+                console.error('Error fetching data:', err);
+                // Removed setError(t('postJob.error')) here so it doesn't show by default if fetching fails
+            } finally {
+                setLoadingWorkers(false);
             }
         };
-        fetchCategories();
+        fetchData();
     }, []);
 
     const handleChange = (e) => {
@@ -38,13 +49,20 @@ const PostJob = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setError('');
+        setSubmitting(true);
         try {
-            await api.post('/jobs', { ...formData, postedBy: user._id });
+            await api.post('/jobs', { ...formData });
             alert(t('postJob.success'));
             navigate('/dashboard');
         } catch (err) {
             console.error('Error posting job:', err);
-            setError(t('postJob.error'));
+            const serverMessage = err.response?.data?.message;
+            const axiosMessage = err.message;
+            const detailedError = serverMessage ? `${serverMessage}` : (axiosMessage || t('postJob.error'));
+            setError(detailedError);
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -57,6 +75,22 @@ const PostJob = () => {
                 </div>
 
                 <div className="p-8">
+                    {/* Browse Workers Hint */}
+                    <div className="mb-8 p-4 bg-blue-50 rounded-xl border border-blue-100 flex items-center justify-between">
+                        <div className="flex items-center">
+                            <div className="bg-blue-600 p-2 rounded-lg text-white mr-4">
+                                <List size={20} />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-blue-900 text-sm">Need a specific professional?</h3>
+                                <p className="text-blue-700 text-xs mt-0.5">Browse through our community of skilled experts.</p>
+                            </div>
+                        </div>
+                        <Link to="/workers" className="text-blue-600 font-bold text-sm hover:underline flex items-center">
+                            Browse Workers <ArrowRight size={16} className="ml-1" />
+                        </Link>
+                    </div>
+
                     {error && <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-6 text-sm">{error}</div>}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
@@ -162,11 +196,47 @@ const PostJob = () => {
 
                         <button
                             type="submit"
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
+                            disabled={submitting}
+                            className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 ${submitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >
-                            {t('postJob.submit')}
+                            {submitting ? 'Posting...' : t('postJob.submit')}
                         </button>
                     </form>
+
+                    {/* Featured Workers Preview */}
+                    {!loadingWorkers && workers.length > 0 && (
+                        <div className="mt-16 pt-12 border-t border-gray-100">
+                            <h3 className="text-xl font-bold text-gray-900 mb-6 flex items-center">
+                                <Star size={20} className="mr-2 text-yellow-500 fill-yellow-500" />
+                                Community Experts Ready to Help
+                            </h3>
+                            <div className="grid gap-6 md:grid-cols-3">
+                                {workers.map(worker => (
+                                    <div key={worker._id} className="p-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-blue-200 transition-all group">
+                                        <div className="bg-white w-10 h-10 rounded-full flex items-center justify-center text-blue-600 mb-3 shadow-sm group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                            <User size={20} />
+                                        </div>
+                                        <h4 className="font-bold text-gray-900 text-sm mb-1">{worker.name || 'Professional'}</h4>
+                                        <div className="flex flex-wrap gap-1 mb-3">
+                                            {worker.skills?.slice(0, 2).map((skill, i) => (
+                                                <span key={i} className="text-[10px] font-bold uppercase bg-blue-100 text-blue-700 px-2 py-0.5 rounded">
+                                                    {skill}
+                                                </span>
+                                            ))}
+                                        </div>
+                                        <p className="text-gray-500 text-xs line-clamp-2 italic mb-4">
+                                            "{worker.bio || 'Available for professional services in Rwanda.'}"
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-8 text-center">
+                                <Link to="/workers" className="inline-flex items-center text-blue-600 font-bold text-sm hover:underline">
+                                    View all professionals <ArrowRight size={16} className="ml-1" />
+                                </Link>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

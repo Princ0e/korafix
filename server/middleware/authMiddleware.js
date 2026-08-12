@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 const protect = async (req, res, next) => {
+    console.log(`Protect middleware called for: ${req.method} ${req.originalUrl}`);
     let token;
 
     if (
@@ -19,11 +20,13 @@ const protect = async (req, res, next) => {
         } catch (error) {
             console.error(error);
             res.status(401).json({ message: 'Not authorized, token failed' });
+            return;
         }
     }
 
     if (!token) {
-        res.status(401).json({ message: 'Not authorized, no token' });
+        res.status(401).json({ message: 'SERVER_AUTH_ERROR_NO_TOKEN' });
+        return;
     }
 };
 

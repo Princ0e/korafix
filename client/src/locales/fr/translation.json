@@ -31,7 +31,7 @@
         "viewAll": "Voir Tout",
         "viewProfessionals": "Voir les professionnels",
         "ctaTitle": "Prêt à faire avancer les choses ?",
-        "ctaDesc": "Rejoignez des milliers d'utilisateurs qui économisent déjà du temps et de l'argent avec KoraFix.",
+        "ctaDesc": "Rejoignez des milliers d'utilisateurs qui économisent déjà du temps et de l'argent avec KoraFiks.",
         "getStarted": "Commencer",
         "browseJobs": "Parcourir les Emplois"
     },
@@ -51,7 +51,8 @@
         "carpenter": "Charpentier",
         "mechanic": "Mécanicien",
         "graphicDesigner": "Graphiste",
-        "houseHelper": "Aide Ménagère"
+        "houseHelper": "Aide Ménagère",
+        "others": "Autres"
     },
     "categoriesPage": {
         "title": "Explorer les Catégories",
@@ -89,19 +90,37 @@
         "checkBack": "Revenez plus tard pour de nouvelles opportunités.",
         "general": "Général",
         "posted": "Publié le",
-        "applyExclamation": "Postuler Maintenant !"
+        "applyExclamation": "Postuler Maintenant !",
+        "workerCTA": {
+            "title": "Vous cherchez du travail ?",
+            "subtitle": "Publiez le service que vous fournissez pour entrer en contact avec les employeurs",
+            "button": "Publiez Vos Compétences"
+        }
+    },
+    "workerInfo": {
+        "title": "Complétez Votre Profil Professionnel",
+        "subtitle": "Présentez vos compétences et votre expérience pour trouver les meilleures opportunités.",
+        "skills": "Compétences Professionnelles",
+        "skillsPlaceholder": "ex: Plomberie, Web Design, Cuisine (séparés par des virgules)",
+        "bio": "Bio Professionnelle / À propos de vous",
+        "bioPlaceholder": "Parlez-nous de votre expérience et de ce que vous pouvez faire...",
+        "phone": "Numéro de téléphone",
+        "whatsapp": "Numéro WhatsApp",
+        "save": "Enregistrer le Profil",
+        "success": "Profil mis à jour avec succès !",
+        "error": "Échec de la mise à jour du profil. Veuillez réessayer."
     },
     "admin": {
         "dashboard": "Tableau de Bord Admin",
-        "jobSeekers": "Demandeurs d'Emploi (Travailleurs)",
-        "noJobSeekers": "Aucun demandeur d'emploi trouvé.",
+        "jobSeekers": "Employés",
+        "noJobSeekers": "Aucun employé trouvé.",
         "serviceRequests": "Demandes de Service",
         "noServiceRequests": "Aucune demande de service trouvée.",
         "name": "Nom",
         "phone": "Téléphone",
         "email": "Email",
         "jobService": "Emploi/Service",
-        "clientName": "Nom du Client"
+        "clientName": "Nom de l'Employeur"
     },
     "auth": {
         "signInTitle": "Connectez-vous à votre compte",
@@ -115,8 +134,12 @@
         "signInLink": "Se connecter",
         "fullName": "Nom Complet",
         "iAmA": "Je suis un...",
-        "clientRole": "Client",
-        "workerRole": "Travailleur",
+        "clientRole": "Employeur",
+        "workerRole": "Employé",
         "createAccountButton": "Créer un Compte"
+    },
+    "footer": {
+        "followUs": "Suivez-nous",
+        "rights": "Tous droits réservés."
     }
 }

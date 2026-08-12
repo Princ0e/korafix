@@ -21,7 +21,12 @@ const Dashboard = () => {
                     </div>
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.welcome', { name: user.name })}</h1>
-                        <p className="text-gray-500 mt-1 capitalize">{t('dashboard.accountType', { role: user.role })}</p>
+                        <p className="text-gray-500 mt-1">
+                            {user.role === 'admin' ? t('navbar.adminPanel') :
+                                user.role === 'client' ? t('auth.clientRole') :
+                                    user.role === 'worker' ? t('auth.workerRole') :
+                                        user.role} {t('dashboard.accountType', { role: '' }).trim()}
+                        </p>
                     </div>
                 </div>
             </div>

@@ -31,7 +31,7 @@
         "viewAll": "Reba Byose",
         "viewProfessionals": "Reba abakozi",
         "ctaTitle": "Witeguye gukora?",
-        "ctaDesc": "Iyunge ku bihumbi by'abakoresha bamaze kuzigama igihe n'amafaranga na KoraFix.",
+        "ctaDesc": "Iyunge ku bihumbi by'abakoresha bamaze kuzigama igihe n'amafaranga na KoraFiks.",
         "getStarted": "Tangira",
         "browseJobs": "Reba Imirimo"
     },
@@ -51,7 +51,8 @@
         "carpenter": "Umubaji",
         "mechanic": "Mekanike",
         "graphicDesigner": "Umuhanzi w'Ibishushanyo",
-        "houseHelper": "Umukozi wo mu Rugo"
+        "houseHelper": "Umukozi wo mu Rugo",
+        "others": "Ibindi"
     },
     "categoriesPage": {
         "title": "Reba Ibyiciro",
@@ -89,19 +90,37 @@
         "checkBack": "Garuka myuma urebe amahirwe mashya.",
         "general": "Rusange",
         "posted": "Byashyizweho",
-        "applyExclamation": "Saba Akazi Nonaha!"
+        "applyExclamation": "Saba Akazi Nonaha!",
+        "workerCTA": {
+            "title": "Ushaka Akazi?",
+            "subtitle": "Shyiraho serivisi utanga kugira ngo ube wahura n'abakoresha",
+            "button": "Shyiraho Ubumenyi Bwawe"
+        }
+    },
+    "workerInfo": {
+        "title": "Uzuza Umwirondoro wawe w'Umwuga",
+        "subtitle": "Garagaza ubumenyi n'inararibonye byawe kugira ngo ubone amahirwe meza.",
+        "skills": "Ubumenyi bw'Umwuga",
+        "skillsPlaceholder": "urugero: Kubaza, Gukora Imbuga, Guteka (itandukanye n'akabwitabwitwa)",
+        "bio": "Amateka y'Umwuga / Ibikwerekeyeho",
+        "bioPlaceholder": "Tubwire inararibonye yawe n'ibyo ushobora gukora...",
+        "phone": "Nimero ya Telefone",
+        "whatsapp": "Nimero ya WhatsApp",
+        "save": "Bika Umwirondoro",
+        "success": "Umwirondoro wavuguruwe neza!",
+        "error": "Guvugurura umwirondoro byanze. Ongera ugerageze."
     },
     "admin": {
         "dashboard": "Admin Dashboard",
-        "jobSeekers": "Abashaka Akazi (Abakozi)",
-        "noJobSeekers": "Nta bashaka akazi babonetse.",
+        "jobSeekers": "Abakozi",
+        "noJobSeekers": "Nta bakozi babonetse.",
         "serviceRequests": "Ubusabe bwa Serivisi",
         "noServiceRequests": "Nta busabe bwa serivisi bwabonetse.",
         "name": "Izina",
         "phone": "Telefone",
         "email": "Imeri",
         "jobService": "Akazi/Serivisi",
-        "clientName": "Izina ry'Umukiliya"
+        "clientName": "Izina ry'Umukoresha"
     },
     "auth": {
         "signInTitle": "Injira muri konti yawe",
@@ -115,8 +134,12 @@
         "signInLink": "Injira",
         "fullName": "Amazina Yose",
         "iAmA": "Ndi...",
-        "clientRole": "Umukiliya",
+        "clientRole": "Umukoresha",
         "workerRole": "Umukozi",
         "createAccountButton": "Fungura Konti"
+    },
+    "footer": {
+        "followUs": "Dukurikire",
+        "rights": "Uburenganzira bwose bwabikiwe."
     }
 }

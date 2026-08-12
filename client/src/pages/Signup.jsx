@@ -1,20 +1,23 @@
 import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Mail, Lock, User, Briefcase } from 'lucide-react';
 
 const Signup = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { signup } = useContext(AuthContext);
+    const [error, setError] = useState('');
+    const redirect = new URLSearchParams(location.search).get('redirect');
+
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
-        role: 'client'
+        role: redirect === '/worker-info' ? 'worker' : 'client'
     });
-    const [error, setError] = useState('');
-    const { signup } = useContext(AuthContext);
-    const navigate = useNavigate();
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -25,7 +28,7 @@ const Signup = () => {
         setError('');
         const res = await signup(formData);
         if (res.success) {
-            navigate('/dashboard');
+            navigate(redirect || '/dashboard');
         } else {
             setError(res.message);
         }
@@ -124,7 +127,7 @@ const Signup = () => {
                         <div>
                             <button
                                 type="submit"
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary"
+                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white bg-slate-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95"
                             >
                                 {t('auth.createAccountButton')}
                             </button>

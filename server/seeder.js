@@ -13,7 +13,8 @@ const categories = [
     { name: 'Carpenter', group: 'Construction', description: 'Woodworking, furniture, framing.' },
     { name: 'Mechanic', group: 'Mechanical', description: 'Car repair, engine maintenance.' },
     { name: 'Graphic Designer', group: 'Creative', description: 'Logos, branding, illustrations.' },
-    { name: 'House Helper', group: 'Home', description: 'Cleaning, housekeeping, general assistance.' }
+    { name: 'House Helper', group: 'Home', description: 'Cleaning, housekeeping, general assistance.' },
+    { name: 'Others', group: 'Other', description: 'Other services not listed above.' }
 ];
 
 const importData = async () => {

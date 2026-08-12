@@ -31,7 +31,7 @@
         "viewAll": "View All",
         "viewProfessionals": "View professionals",
         "ctaTitle": "Ready to get things done?",
-        "ctaDesc": "Join thousands of users who are already saving time and money with KoraFix.",
+        "ctaDesc": "Join thousands of users who are already saving time and money with KoraFiks.",
         "getStarted": "Get Started",
         "browseJobs": "Browse Jobs"
     },
@@ -51,7 +51,8 @@
         "carpenter": "Carpenter",
         "mechanic": "Mechanic",
         "graphicDesigner": "Graphic Designer",
-        "houseHelper": "House Helper"
+        "houseHelper": "House Helper",
+        "others": "Others"
     },
     "categoriesPage": {
         "title": "Explore Categories",
@@ -88,20 +89,38 @@
         "noJobs": "No jobs found",
         "checkBack": "Check back later for new opportunities.",
         "general": "General",
-        "posted": "Posted",
-        "applyExclamation": "Apply Now!"
+        "posted": "Posted on",
+        "applyExclamation": "Apply Now !",
+        "workerCTA": {
+            "title": "Looking for Work?",
+            "subtitle": "Post the service you provide to connect with employers",
+            "button": "Post Your Skills"
+        }
+    },
+    "workerInfo": {
+        "title": "Complete Your Professional Profile",
+        "subtitle": "Showcase your skills and experience to find the best opportunities.",
+        "skills": "Professional Skills",
+        "skillsPlaceholder": "e.g. Plumbing, Web Design, Cooking (comma separated)",
+        "bio": "Professional Bio / About You",
+        "bioPlaceholder": "Tell us about your experience and what you can do...",
+        "phone": "Phone Number",
+        "whatsapp": "WhatsApp Number",
+        "save": "Save Profile",
+        "success": "Profile updated successfully!",
+        "error": "Failed to update profile. Please try again."
     },
     "admin": {
         "dashboard": "Admin Dashboard",
-        "jobSeekers": "Job Seekers (Workers)",
-        "noJobSeekers": "No job seekers found.",
+        "jobSeekers": "Employees",
+        "noJobSeekers": "No employees found.",
         "serviceRequests": "Service Requests",
         "noServiceRequests": "No service requests found.",
         "name": "Name",
         "phone": "Phone",
         "email": "Email",
         "jobService": "Job/Service",
-        "clientName": "Client Name"
+        "clientName": "Employer Name"
     },
     "auth": {
         "signInTitle": "Sign in to your account",
@@ -115,8 +134,12 @@
         "signInLink": "Sign in",
         "fullName": "Full Name",
         "iAmA": "I am a...",
-        "clientRole": "Client",
-        "workerRole": "Worker",
+        "clientRole": "Employer",
+        "workerRole": "Employee",
         "createAccountButton": "Create Account"
+    },
+    "footer": {
+        "followUs": "Follow Us",
+        "rights": "All rights reserved."
     }
 }

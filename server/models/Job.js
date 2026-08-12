@@ -4,7 +4,7 @@ const jobSchema = new mongoose.Schema({
     client: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required: true
+        required: false
     },
     title: {
         type: String,

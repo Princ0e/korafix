@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
-import { MapPin, Calendar, DollarSign, Briefcase } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { MapPin, Calendar, DollarSign, Briefcase, Star, ArrowRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import AuthContext from '../context/AuthContext';
+import { useContext } from 'react';
 
 const Jobs = () => {
     const { t } = useTranslation();
+    const navigate = useNavigate();
+    const { user } = useContext(AuthContext);
     const [jobs, setJobs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -31,6 +35,29 @@ const Jobs = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            {/* Worker CTA Section */}
+            <div className="mb-16 bg-gradient-to-r from-slate-900 to-blue-900 rounded-3xl p-8 md:p-12 text-white shadow-2xl relative overflow-hidden group">
+                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                    <Briefcase size={120} />
+                </div>
+                <div className="relative z-10 max-w-2xl">
+                    <div className="inline-flex items-center px-4 py-2 bg-blue-500/20 rounded-full text-blue-300 text-sm font-bold mb-6 border border-blue-500/30">
+                        <Star size={16} className="mr-2" />
+                        {t('jobs.workerCTA.title')}
+                    </div>
+                    <h2 className="text-3xl md:text-4xl font-black mb-6 leading-tight">
+                        {t('jobs.workerCTA.subtitle')}
+                    </h2>
+                    <button
+                        onClick={() => navigate(user ? '/worker-info' : '/login?redirect=/worker-info')}
+                        className="inline-flex items-center px-8 py-4 bg-white text-slate-900 font-bold rounded-xl hover:bg-blue-50 transition-all duration-300 group shadow-lg"
+                    >
+                        {t('jobs.workerCTA.button')}
+                        <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                    </button>
+                </div>
+            </div>
+
             <div className="text-center mb-12">
                 <h1 className="text-4xl font-extrabold text-gray-900 mb-4">{t('jobs.title')}</h1>
                 <p className="text-lg text-gray-500">{t('jobs.subtitle')}</p>

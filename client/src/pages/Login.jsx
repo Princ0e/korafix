@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import { Mail, Lock } from 'lucide-react';
 
@@ -11,13 +11,15 @@ const Login = () => {
     const [error, setError] = useState('');
     const { login } = useContext(AuthContext);
     const navigate = useNavigate();
+    const location = useLocation();
+    const redirect = new URLSearchParams(location.search).get('redirect') || '/dashboard';
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
         const res = await login(email, password);
         if (res.success) {
-            navigate('/dashboard');
+            navigate(redirect);
         } else {
             setError(res.message);
         }
@@ -77,7 +79,7 @@ const Login = () => {
                         <div>
                             <button
                                 type="submit"
-                                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-secondary hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-secondary"
+                                className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-lg text-sm font-bold text-white bg-slate-900 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-900 transition-all duration-300 transform hover:-translate-y-0.5 active:scale-95"
                             >
                                 {t('auth.signInButton')}
                             </button>

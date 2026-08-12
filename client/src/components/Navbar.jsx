@@ -36,7 +36,7 @@ const Navbar = () => {
                             <div className="h-10 w-10 bg-blue-600 rounded-xl flex items-center justify-center text-white mr-3 shadow-lg group-hover:rotate-3 transition-transform">
                                 <span className="font-bold text-xl">K</span>
                             </div>
-                            <span className="text-2xl font-extrabold text-slate-900 tracking-tight">Kora<span className="text-blue-600">Fix</span></span>
+                            <span className="text-2xl font-extrabold text-slate-900 tracking-tight">Kora<span className="text-blue-600">Fiks</span></span>
                         </Link>
                     </div>
 

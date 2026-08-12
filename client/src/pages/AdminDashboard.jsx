@@ -67,15 +67,36 @@ const AdminDashboard = () => {
                                     <tr className="border-b">
                                         <th className="py-2 text-gray-600">{t('admin.name')}</th>
                                         <th className="py-2 text-gray-600">{t('admin.phone')}</th>
-                                        <th className="py-2 text-gray-600">{t('admin.email')}</th>
+                                        <th className="py-2 text-gray-600">Skills</th>
+                                        <th className="py-2 text-gray-600">Bio</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {jobSeekers.map((worker) => (
                                         <tr key={worker._id} className="border-b hover:bg-gray-50">
-                                            <td className="py-2 font-medium">{worker.name}</td>
-                                            <td className="py-2">{worker.phone}</td>
-                                            <td className="py-2 text-sm text-gray-500">{worker.email}</td>
+                                            <td className="py-2 font-medium">{worker.name || 'Unnamed'}</td>
+                                            <td className="py-2">
+                                                <div className="font-medium text-gray-800">
+                                                    {worker.phone || (worker.socialLinks?.whatsapp && `WA: ${worker.socialLinks.whatsapp}`) || 'N/A'}
+                                                </div>
+                                                <div className="text-xs text-gray-400">{worker.email}</div>
+                                            </td>
+                                            <td className="py-2">
+                                                <div className="flex flex-wrap gap-1">
+                                                    {worker.skills && worker.skills.length > 0 ? (
+                                                        worker.skills.map((skill, index) => (
+                                                            <span key={index} className="px-2 py-0.5 bg-blue-50 text-blue-600 rounded text-xs font-medium">
+                                                                {skill}
+                                                            </span>
+                                                        ))
+                                                    ) : (
+                                                        <span className="text-gray-400 text-xs">No skills</span>
+                                                    )}
+                                                </div>
+                                            </td>
+                                            <td className="py-2 text-xs text-gray-500 max-w-xs truncate" title={worker.bio}>
+                                                {worker.bio || 'No bio'}
+                                            </td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -103,8 +124,8 @@ const AdminDashboard = () => {
                                     {serviceSeekers.map((job) => (
                                         <tr key={job._id} className="border-b hover:bg-gray-50">
                                             <td className="py-2 font-medium">{job.title}</td>
-                                            <td className="py-2">{job.client?.name || 'Unknown'}</td>
-                                            <td className="py-2">{job.client?.phone || 'N/A'}</td>
+                                            <td className="py-2 text-sm text-gray-500">{job.client?.name || 'Anonymous'}</td>
+                                            <td className="py-2">{job.phone || 'N/A'}</td>
                                         </tr>
                                     ))}
                                 </tbody>
