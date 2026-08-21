@@ -12,8 +12,30 @@ connectDB();
 const app = express();
 
 app.use(express.json());
+const allowedOrigins = [
+    'https://korafix.net',
+    'https://www.korafix.net',
+    'http://localhost:5173',
+    'http://localhost:3000'
+];
+
+if (process.env.CLIENT_URL) {
+    allowedOrigins.push(process.env.CLIENT_URL.replace(/\/$/, ''));
+}
+
 app.use(cors({
-    origin: process.env.CLIENT_URL || '*',
+    origin: function (origin, callback) {
+        if (!origin) return callback(null, true);
+        if (
+            allowedOrigins.includes(origin) ||
+            origin.endsWith('.vercel.app') ||
+            origin.includes('korafix.net') ||
+            process.env.CLIENT_URL === '*'
+        ) {
+            return callback(null, true);
+        }
+        return callback(null, true);
+    },
     credentials: true
 }));
 app.use(helmet());
