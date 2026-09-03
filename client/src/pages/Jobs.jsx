@@ -5,6 +5,20 @@ import { MapPin, Calendar, Briefcase, Star, ArrowRight, CheckCircle, AlertCircle
 import { useNavigate, useLocation } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 
+const renderLocation = (loc) => {
+    if (!loc) return 'Rwanda';
+    if (typeof loc === 'string') return loc;
+    if (typeof loc === 'object') return loc.city || loc.address || 'Rwanda';
+    return String(loc);
+};
+
+const renderCategory = (cat) => {
+    if (!cat) return 'General';
+    if (typeof cat === 'string') return cat;
+    if (typeof cat === 'object' && cat.name) return cat.name;
+    return 'General';
+};
+
 const Jobs = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -50,6 +64,7 @@ const Jobs = () => {
 
     const openApplyModal = (job) => {
         try {
+            console.log('Opening apply modal for job:', job);
             setApplyJobTarget(job);
             setFormError('');
             setApplyForm({
@@ -141,7 +156,7 @@ const Jobs = () => {
                             </span>
                             <h2 className="text-2xl font-bold text-gray-900 leading-tight">{applyJobTarget.title}</h2>
                             <p className="text-xs text-gray-500 mt-1">
-                                {applyJobTarget.location} • Budget: <span className="font-semibold text-green-600">{applyJobTarget.budget?.toLocaleString()} RWF</span>
+                                {renderLocation(applyJobTarget.location)} • Budget: <span className="font-semibold text-green-600">{applyJobTarget.budget ? (typeof applyJobTarget.budget === 'number' ? applyJobTarget.budget.toLocaleString() : applyJobTarget.budget) : 'N/A'} RWF</span>
                             </p>
                         </div>
 
@@ -312,12 +327,12 @@ const Jobs = () => {
                                 <div className="flex justify-between items-start mb-4">
                                     <div>
                                         <span className="inline-block px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold uppercase tracking-wide mb-2">
-                                            {job.category?.name || 'General'}
+                                            {renderCategory(job.category)}
                                         </span>
                                         <h3 className="text-xl font-bold text-gray-900 mb-1">{job.title}</h3>
                                     </div>
                                     <span className="text-green-600 font-bold bg-green-50 px-3 py-1 rounded-lg text-sm">
-                                        {job.budget?.toLocaleString()} RWF
+                                        {job.budget ? (typeof job.budget === 'number' ? job.budget.toLocaleString() : job.budget) : 'N/A'} RWF
                                     </span>
                                 </div>
 
@@ -328,11 +343,11 @@ const Jobs = () => {
                                 <div className="border-t border-gray-50 pt-4 mt-auto space-y-3">
                                     <div className="flex items-center text-sm text-gray-500">
                                         <MapPin size={16} className="mr-2 text-gray-400" />
-                                        {job.location}
+                                        {renderLocation(job.location)}
                                     </div>
                                     <div className="flex items-center text-sm text-gray-500">
                                         <Calendar size={16} className="mr-2 text-gray-400" />
-                                        {t('jobs.posted')} {new Date(job.createdAt).toLocaleDateString()}
+                                        {t('jobs.posted')} {job.createdAt ? new Date(job.createdAt).toLocaleDateString() : 'Recently'}
                                     </div>
                                 </div>
 
