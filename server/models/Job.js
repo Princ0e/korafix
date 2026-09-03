@@ -45,6 +45,9 @@ const jobSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         },
+        name: String,
+        phone: String,
+        skills: String,
         bidAmount: Number,
         message: String,
         createdAt: {

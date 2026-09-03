@@ -13,12 +13,15 @@ const getJobSeekers = async (req, res) => {
     }
 };
 
-// @desc    Get all jobs (service requests) with client details
+// @desc    Get all jobs (service requests) with client details and worker applicants
 // @route   GET /api/admin/service-seekers
 // @access  Private/Admin
 const getServiceSeekers = async (req, res) => {
     try {
-        const jobs = await Job.find({}).populate('client', 'name email phone');
+        const jobs = await Job.find({})
+            .populate('client', 'name email phone')
+            .populate('category', 'name')
+            .populate('applicants.worker', 'name email phone skills bio socialLinks');
         res.json(jobs);
     } catch (error) {
         res.status(500).json({ message: error.message });

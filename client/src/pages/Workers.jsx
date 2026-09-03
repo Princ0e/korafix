@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { User, Briefcase, MapPin, MessageSquare, Star, Search } from 'lucide-react';
 
@@ -98,26 +99,16 @@ const Workers = () => {
                             </div>
 
                             <div className="p-6 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
-                                {worker.socialLinks?.whatsapp ? (
-                                    <a
-                                        href={`https://wa.me/${worker.socialLinks.whatsapp}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center text-green-600 font-bold hover:text-green-700 transition-colors"
-                                    >
-                                        <MessageSquare size={18} className="mr-2" />
-                                        WhatsApp
-                                    </a>
-                                ) : (
-                                    <div className="text-gray-400 text-sm font-medium flex items-center">
-                                        <MessageSquare size={18} className="mr-2" />
-                                        No Number
-                                    </div>
-                                )}
-
-                                <div className="flex items-center text-blue-600 font-bold text-sm">
-                                    View Profile <Star size={14} className="ml-1 fill-blue-600" />
+                                <div className="text-slate-700 text-xs font-bold bg-blue-50/80 text-blue-800 px-3 py-1.5 rounded-lg flex items-center border border-blue-100">
+                                    Connected by Admin
                                 </div>
+
+                                <Link
+                                    to="/hire"
+                                    className="flex items-center text-blue-600 font-bold text-sm hover:text-blue-700 transition"
+                                >
+                                    Post Job & Hire <Star size={14} className="ml-1 fill-blue-600" />
+                                </Link>
                             </div>
                         </div>
                     ))}
