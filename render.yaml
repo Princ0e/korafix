@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: korafix
+    env: node
+    region: oregon
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: ADMIN_EMAIL
+        value: qickfixer70@gmail.com
