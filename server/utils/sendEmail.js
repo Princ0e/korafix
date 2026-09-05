@@ -2,70 +2,77 @@ const nodemailer = require('nodemailer');
 
 const sendAdminNotificationEmail = async ({ job, worker, client }) => {
     try {
+        const adminEmail = process.env.ADMIN_EMAIL || 'qickfixer70@gmail.com';
+        const smtpUser = process.env.SMTP_USER || process.env.EMAIL_USER || process.env.GMAIL_USER;
+        const smtpPass = process.env.SMTP_PASS || process.env.EMAIL_PASS || process.env.GMAIL_PASS || process.env.GMAIL_APP_PASSWORD;
+        const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
+        const smtpPort = parseInt(process.env.SMTP_PORT || '587');
+
+        if (!smtpUser || !smtpPass) {
+            console.warn(`[KoraFix Email Alert] SMTP credentials missing on server. Could not send live email to ${adminEmail}. Please configure EMAIL_USER and EMAIL_PASS environment variables in your server host environment.`);
+            console.log('--- [PENDING EMAIL NOTIFICATION DATA] ---');
+            console.log(`To: ${adminEmail}`);
+            console.log(`Job: ${job.title} | Worker: ${worker.name} (${worker.phone}) | Client: ${client?.name} (${job.phone || client?.phone})`);
+            return;
+        }
+
         const transporter = nodemailer.createTransport({
-            host: process.env.SMTP_HOST || 'smtp.gmail.com',
-            port: parseInt(process.env.SMTP_PORT || '587'),
-            secure: process.env.SMTP_SECURE === 'true',
+            host: smtpHost,
+            port: smtpPort,
+            secure: smtpPort === 465, // true for 465, false for 587
             auth: {
-                user: process.env.SMTP_USER || process.env.EMAIL_USER || '',
-                pass: process.env.SMTP_PASS || process.env.EMAIL_PASS || '',
+                user: smtpUser,
+                pass: smtpPass,
             },
+            tls: {
+                rejectUnauthorized: false
+            }
         });
 
-        const adminEmail = process.env.ADMIN_EMAIL || 'qickfixer70@gmail.com';
-
         const mailOptions = {
-            from: process.env.EMAIL_FROM || '"KoraFix Platform" <noreply@korafix.net>',
+            from: process.env.EMAIL_FROM || `"KoraFix Platform" <${smtpUser}>`,
             to: adminEmail,
-            subject: `[KoraFix Alert] New Job Application: ${job.title}`,
+            subject: `🚨 [KoraFix Application Alert] ${job.title}`,
             html: `
-                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
-                    <div style="background-color: #0f172a; color: #ffffff; padding: 20px; text-align: center;">
-                        <h2 style="margin: 0;">New Job Application Received</h2>
-                        <p style="margin: 5px 0 0 0; color: #94a3b8;">KoraFix Admin Notification</p>
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                    <div style="background-color: #0f172a; color: #ffffff; padding: 24px; text-align: center;">
+                        <h2 style="margin: 0; font-size: 20px;">New Job Application Received</h2>
+                        <p style="margin: 6px 0 0 0; color: #94a3b8; font-size: 14px;">KoraFix Platform Alert</p>
                     </div>
                     
-                    <div style="padding: 24px; color: #334155;">
-                        <p style="font-size: 16px; margin-top: 0;">Hello Admin,</p>
-                        <p style="font-size: 15px; line-height: 1.5;">An employee has applied for a job posted on KoraFix. Please review the details below and connect them.</p>
+                    <div style="padding: 24px; color: #334155; font-size: 15px;">
+                        <p style="margin-top: 0;">Hello Admin,</p>
+                        <p style="line-height: 1.5;">An employee has applied for a job posted on <strong>KoraFix.net</strong>. Please review their information below to connect them with the employer.</p>
 
-                        <div style="background-color: #f8fafc; border-left: 4px solid #2563eb; padding: 16px; margin: 20px 0; border-radius: 4px;">
-                            <h3 style="margin-top: 0; color: #1e3a8a; font-size: 16px;">📋 Job Information</h3>
-                            <p style="margin: 4px 0;"><strong>Job Title:</strong> ${job.title}</p>
-                            <p style="margin: 4px 0;"><strong>Budget:</strong> ${job.budget ? job.budget.toLocaleString() + ' RWF' : 'N/A'}</p>
-                            <p style="margin: 4px 0;"><strong>Location:</strong> ${job.location || 'N/A'}</p>
+                        <div style="background-color: #eff6ff; border-left: 4px solid #2563eb; padding: 16px; margin: 20px 0; border-radius: 6px;">
+                            <h3 style="margin-top: 0; color: #1e40af; font-size: 15px; text-transform: uppercase;">📋 Job Information</h3>
+                            <p style="margin: 6px 0;"><strong>Job Title:</strong> ${job.title}</p>
+                            <p style="margin: 6px 0;"><strong>Budget:</strong> ${job.budget ? job.budget.toLocaleString() + ' RWF' : 'N/A'}</p>
+                            <p style="margin: 6px 0;"><strong>Location:</strong> ${typeof job.location === 'object' ? (job.location.city || job.location.address || 'Rwanda') : (job.location || 'N/A')}</p>
                         </div>
 
-                        <div style="background-color: #f8fafc; border-left: 4px solid #16a34a; padding: 16px; margin: 20px 0; border-radius: 4px;">
-                            <h3 style="margin-top: 0; color: #14532d; font-size: 16px;">👤 Applicant (Employee) Details</h3>
-                            <p style="margin: 4px 0;"><strong>Name:</strong> ${worker.name || 'N/A'}</p>
-                            <p style="margin: 4px 0;"><strong>Email:</strong> ${worker.email || 'N/A'}</p>
-                            <p style="margin: 4px 0;"><strong>Phone:</strong> ${worker.phone || (worker.socialLinks?.whatsapp ? 'WA: ' + worker.socialLinks.whatsapp : 'N/A')}</p>
+                        <div style="background-color: #f0fdf4; border-left: 4px solid #16a34a; padding: 16px; margin: 20px 0; border-radius: 6px;">
+                            <h3 style="margin-top: 0; color: #166534; font-size: 15px; text-transform: uppercase;">👤 Applicant (Employee)</h3>
+                            <p style="margin: 6px 0;"><strong>Name:</strong> ${worker.name || 'Guest Applicant'}</p>
+                            <p style="margin: 6px 0;"><strong>Phone:</strong> <a href="tel:${worker.phone}" style="color: #16a34a; font-weight: bold;">${worker.phone || 'N/A'}</a></p>
+                            <p style="margin: 6px 0;"><strong>Email:</strong> ${worker.email || 'N/A'}</p>
+                            <p style="margin: 6px 0;"><strong>Skills / Experience:</strong> ${worker.skills || 'N/A'}</p>
                         </div>
 
-                        <div style="background-color: #f8fafc; border-left: 4px solid #9333ea; padding: 16px; margin: 20px 0; border-radius: 4px;">
-                            <h3 style="margin-top: 0; color: #581c87; font-size: 16px;">🏢 Employer (Client) Details</h3>
-                            <p style="margin: 4px 0;"><strong>Name:</strong> ${client?.name || 'Anonymous'}</p>
-                            <p style="margin: 4px 0;"><strong>Email:</strong> ${client?.email || 'N/A'}</p>
-                            <p style="margin: 4px 0;"><strong>Phone:</strong> ${job.phone || client?.phone || 'N/A'}</p>
+                        <div style="background-color: #faf5ff; border-left: 4px solid #9333ea; padding: 16px; margin: 20px 0; border-radius: 6px;">
+                            <h3 style="margin-top: 0; color: #6b21a8; font-size: 15px; text-transform: uppercase;">🏢 Employer (Client)</h3>
+                            <p style="margin: 6px 0;"><strong>Name:</strong> ${client?.name || 'Anonymous'}</p>
+                            <p style="margin: 6px 0;"><strong>Phone:</strong> <a href="tel:${job.phone || client?.phone}" style="color: #9333ea; font-weight: bold;">${job.phone || client?.phone || 'N/A'}</a></p>
+                            <p style="margin: 6px 0;"><strong>Email:</strong> ${client?.email || 'N/A'}</p>
                         </div>
 
-                        <p style="font-size: 14px; color: #64748b; margin-bottom: 0;">
-                            Log in to the Admin Dashboard at <a href="https://korafix.net/admin" style="color: #2563eb;">korafix.net/admin</a> to manage job requests.
-                        </p>
+                        <div style="text-align: center; margin-top: 28px;">
+                            <a href="https://korafix.net/admin" style="background-color: #0f172a; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; display: inline-block;">View on Admin Dashboard</a>
+                        </div>
                     </div>
                 </div>
             `,
         };
-
-        if (!process.env.SMTP_USER && !process.env.EMAIL_USER) {
-            console.log('--- [ADMIN EMAIL NOTIFICATION LOG] ---');
-            console.log(`To: ${adminEmail}`);
-            console.log(`Subject: ${mailOptions.subject}`);
-            console.log(`Job: ${job.title} | Worker: ${worker.name} (${worker.email}, ${worker.phone}) | Client: ${client?.name} (${job.phone || client?.phone})`);
-            console.log('Note: To send live emails over SMTP, configure SMTP_USER and SMTP_PASS in server environment variables.');
-            return;
-        }
 
         const info = await transporter.sendMail(mailOptions);
         console.log('Admin notification email sent successfully:', info.messageId);
