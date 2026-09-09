@@ -177,12 +177,25 @@ const Home = () => {
                     </div>
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                        {['homeServices', 'tech', 'creative', 'construction', 'mechanical', 'office', 'health', 'education'].map((catKey, idx) => (
-                            <Link to="/categories" key={idx} className="group bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-gray-200 transform hover:-translate-y-1 relative overflow-hidden">
+                        {[
+                            { key: 'homeServices', group: 'Home' },
+                            { key: 'tech',         group: 'Technical' },
+                            { key: 'creative',     group: 'Creative' },
+                            { key: 'construction', group: 'Construction' },
+                            { key: 'mechanical',   group: 'Mechanical' },
+                            { key: 'office',       group: 'Office' },
+                            { key: 'health',       group: 'Healthcare' },
+                            { key: 'education',    group: 'Education' }
+                        ].map(({ key, group }, idx) => (
+                            <Link
+                                to={`/jobs?category=${encodeURIComponent(group)}`}
+                                key={idx}
+                                className="group bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-blue-100 transform hover:-translate-y-1 relative overflow-hidden"
+                            >
                                 <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                                     <Star size={64} className="text-blue-600" />
                                 </div>
-                                <h3 className="font-bold text-xl text-gray-800 group-hover:text-blue-600 transition relative z-10">{t(`categories.${catKey}`)}</h3>
+                                <h3 className="font-bold text-xl text-gray-800 group-hover:text-blue-600 transition relative z-10">{t(`categories.${key}`)}</h3>
                                 <p className="text-sm text-gray-400 mt-2 font-medium group-hover:text-gray-500 transition relative z-10">{t('home.viewProfessionals')}</p>
                             </Link>
                         ))}
@@ -192,6 +205,7 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
 
             {/* CTA Section */}
             <section className="py-20 bg-slate-900 text-white relative overflow-hidden">

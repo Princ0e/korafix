@@ -43,11 +43,13 @@ const Jobs = () => {
                 const searchParams = new URLSearchParams(location.search);
                 const titleParam = searchParams.get('title');
                 const locationParam = searchParams.get('location');
+                const categoryParam = searchParams.get('category');
 
                 const { data } = await api.get('/jobs', {
                     params: {
                         title: titleParam || undefined,
-                        location: locationParam || undefined
+                        location: locationParam || undefined,
+                        category: categoryParam || undefined
                     }
                 });
                 setJobs(data);
@@ -302,7 +304,29 @@ const Jobs = () => {
             <div className="text-center mb-12">
                 <h1 className="text-4xl font-extrabold text-gray-900 mb-4">{t('jobs.title')}</h1>
                 <p className="text-lg text-gray-500">{t('jobs.subtitle')}</p>
+                {new URLSearchParams(location.search).get('category') && (
+                    <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
+                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">
+                            <span>📂</span>
+                            {new URLSearchParams(location.search).get('category')}
+                            <button
+                                type="button"
+                                onClick={() => navigate('/jobs')}
+                                className="ml-1 text-blue-400 hover:text-blue-700 transition cursor-pointer font-bold"
+                                title="Clear filter"
+                            >✕</button>
+                        </span>
+                        <button
+                            type="button"
+                            onClick={() => navigate('/jobs')}
+                            className="text-sm text-gray-400 hover:text-blue-600 underline transition"
+                        >
+                            View all jobs
+                        </button>
+                    </div>
+                )}
             </div>
+
 
             {jobs.length === 0 ? (
                 <div className="text-center py-12 bg-gray-50 rounded-xl border border-gray-100">

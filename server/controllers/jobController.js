@@ -1,4 +1,5 @@
 const Job = require('../models/Job');
+const Category = require('../models/Category');
 const { sendAdminNotificationEmail } = require('../utils/sendEmail');
 
 // @desc    Create a new job
@@ -32,12 +33,12 @@ const createJob = async (req, res) => {
     }
 };
 
-// @desc    Get all jobs (with optional title & location filtering)
+// @desc    Get all jobs (with optional title, location & category filtering)
 // @route   GET /api/jobs
 // @access  Public
 const getJobs = async (req, res) => {
     try {
-        const { title, location } = req.query;
+        const { title, location, category } = req.query;
         let query = { status: 'Open' };
 
         if (title) {
@@ -45,6 +46,18 @@ const getJobs = async (req, res) => {
         }
         if (location) {
             query.location = { $regex: location, $options: 'i' };
+        }
+
+        // Filter by category name or group (e.g. "Education", "IT & Tech", "Home")
+        if (category) {
+            const matchedCategories = await Category.find({
+                $or: [
+                    { name: { $regex: category, $options: 'i' } },
+                    { group: { $regex: category, $options: 'i' } }
+                ]
+            }).select('_id');
+            const categoryIds = matchedCategories.map(c => c._id);
+            query.category = { $in: categoryIds };
         }
 
         // Hide client/job phone from public/employee/employer listings
