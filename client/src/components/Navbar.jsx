@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AuthContext from '../context/AuthContext';
-import { Menu, X, User } from 'lucide-react';
+import { Menu, X, User, ChevronDown } from 'lucide-react';
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -17,15 +17,12 @@ const Navbar = () => {
         navigate('/');
     };
 
-    const toggleLanguage = () => {
-        const currentLang = i18n.language;
-        let newLang;
-        if (currentLang === 'en') newLang = 'rw';
-        else if (currentLang === 'rw') newLang = 'fr';
-        else newLang = 'en';
-
-        i18n.changeLanguage(newLang);
+    const handleLanguageChange = (e) => {
+        const selectedLang = e.target.value;
+        i18n.changeLanguage(selectedLang);
     };
+
+    const currentLang = i18n.language?.slice(0, 2) || 'en';
 
     return (
         <nav className="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 transition-all duration-300">
@@ -47,12 +44,20 @@ const Navbar = () => {
                     </div>
 
                     <div className="hidden md:flex items-center space-x-4">
-                        <button
-                            onClick={toggleLanguage}
-                            className="px-3 py-1 rounded-md bg-gray-100 hover:bg-gray-200 text-sm font-bold text-gray-700 transition w-12 text-center"
-                        >
-                            {i18n.language === 'en' ? 'RW' : i18n.language === 'rw' ? 'FR' : 'EN'}
-                        </button>
+                        {/* Language Selector Dropdown */}
+                        <div className="relative flex items-center">
+                            <select
+                                aria-label="Select Language"
+                                value={currentLang}
+                                onChange={handleLanguageChange}
+                                className="bg-gray-50 border border-gray-200 hover:border-blue-500 hover:bg-white text-gray-800 text-xs font-bold py-2 pl-3 pr-8 rounded-xl outline-none cursor-pointer transition shadow-xs appearance-none"
+                            >
+                                <option value="en">🌐 English (EN)</option>
+                                <option value="rw">🌐 Kinyarwanda (RW)</option>
+                                <option value="fr">🌐 Français (FR)</option>
+                            </select>
+                            <ChevronDown size={14} className="absolute right-2.5 text-gray-500 pointer-events-none" />
+                        </div>
 
                         {user ? (
                             <div className="flex items-center space-x-4">
@@ -89,13 +94,23 @@ const Navbar = () => {
                         <Link to="/hire" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50">{t('navbar.hireTalent')}</Link>
                         <Link to="/categories" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50">{t('navbar.categories')}</Link>
 
+                        {/* Mobile Language Selector Dropdown */}
                         <div className="px-3 py-2">
-                            <button
-                                onClick={toggleLanguage}
-                                className="w-full text-left px-3 py-2 rounded-md bg-gray-50 text-base font-medium text-gray-700 hover:bg-gray-100"
-                            >
-                                {i18n.language === 'en' ? 'Hindura ururimi: Ikinyarwanda' : i18n.language === 'rw' ? 'Changer de langue: Français' : 'Switch Language: English'}
-                            </button>
+                            <label className="block text-xs font-bold text-gray-500 uppercase mb-1">
+                                Language / Ururimi / Langue
+                            </label>
+                            <div className="relative flex items-center">
+                                <select
+                                    aria-label="Select Language Mobile"
+                                    value={currentLang}
+                                    onChange={handleLanguageChange}
+                                    className="w-full bg-gray-50 border border-gray-200 text-gray-800 text-sm font-semibold py-2.5 pl-3 pr-8 rounded-xl outline-none cursor-pointer"
+                                >
+                                    <option value="en">🌐 English (EN)</option>
+                                    <option value="rw">🌐 Kinyarwanda (RW)</option>
+                                    <option value="fr">🌐 Français (FR)</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div className="border-t border-gray-200 mt-4 pt-4">
