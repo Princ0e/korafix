@@ -1,7 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import AuthContext from '../context/AuthContext';
 import api from '../api/axios';
 import { Briefcase, MapPin, DollarSign, FileText, List, ArrowRight, User, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -9,7 +8,6 @@ import { Link } from 'react-router-dom';
 const PostJob = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
-    const { user, loading: authLoading } = useContext(AuthContext);
     const [formData, setFormData] = useState({
         title: '',
         description: '',

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import { User, Briefcase, MapPin, MessageSquare, Star, Search } from 'lucide-react';
 
 const Workers = () => {
-    const { t } = useTranslation();
     const [workers, setWorkers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [search, setSearch] = useState('');

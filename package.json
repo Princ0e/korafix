@@ -4,8 +4,7 @@
   "private": true,
   "description": "KoraFix platform root package configuration for cloud deployment (Render / Vercel)",
   "scripts": {
-    "postinstall": "cd server && npm install",
-    "build": "cd server && npm install",
+    "build": "cd client && npm install && npm run build",
     "start": "cd server && node server.js"
   }
 }
