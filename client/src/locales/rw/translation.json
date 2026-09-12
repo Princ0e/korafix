@@ -46,18 +46,25 @@
         "education": "Uburezi",
         "adminAssistant": "Umufasha mu Biro",
         "webDeveloper": "Umunyamwuga wa Web",
+        "driverAndTransport": "Umushoferi & Gutwara Abantu",
+        "driver": "Umushoferi & Gutwara Abantu",
+        "transport": "Umushoferi & Gutwara Abantu",
         "plumber": "Umukanishi w'Amazi",
         "electrician": "Amashanyarazi",
         "carpenter": "Umubaji",
         "mechanic": "Mekanike",
         "graphicDesigner": "Umuhanzi w'Ibishushanyo",
         "houseHelper": "Umukozi wo mu Rugo",
+        "painter": "Umusize w'Amarangi",
         "others": "Ibindi"
     },
     "categoriesPage": {
         "title": "Reba Ibyiciro",
-        "subtitle": "Vumbura abanyamwuga bafite ubumenyi mu nganda zitandukanye biteguye kugufasha mu mushinga wawe utaha.",
-        "browseExperts": "Reba Impuguke",
+        "subtitle": "Vumbura abanyamwuga bafite ubumenyi n'akazi kabonetse mu nganda zitandukanye.",
+        "browseExperts": "Reba Akazi Gahari",
+        "jobsAvailable": "Akazi {{count}} gahari",
+        "jobsAvailable_plural": "Imirimo {{count}} ihari",
+        "noJobsYet": "Icyiciro gifunguye",
         "loading": "Birimo gukorwa..."
     },
     "dashboard": {

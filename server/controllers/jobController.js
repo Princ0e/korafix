@@ -33,6 +33,45 @@ const createJob = async (req, res) => {
     }
 };
 
+const getCategoryKeywords = (category) => {
+    if (!category) return [];
+    const c = category.toLowerCase().trim();
+    if (c.includes('educat') || c.includes('teach') || c.includes('uburezi') || c.includes('ecole') || c.includes('école')) {
+        return ['teacher', 'primary teacher', 'teach', 'tutor', 'education', 'school', 'music teacher', 'french', 'math'];
+    }
+    if (c.includes('web') || c.includes('tech') || c.includes('develop') || c.includes('design') || c.includes('ikoranabuhanga') || c.includes('software')) {
+        return ['web', 'designer', 'developer', 'software', 'frontend', 'backend', 'code', 'technical', 'programmer'];
+    }
+    if (c.includes('driver') || c.includes('transport') || c.includes('taxi') || c.includes('cab') || c.includes('shoferi') || c.includes('chauffeur')) {
+        return ['driver', 'cab', 'taxi', 'transport', 'driving', 'chauffeur', 'car'];
+    }
+    if (c.includes('home') || c.includes('rugo') || c.includes('domicile') || c.includes('house') || c.includes('clean') || c.includes('helper')) {
+        return ['home', 'house', 'helper', 'cleaning', 'housekeeper', 'maid'];
+    }
+    if (c.includes('plumb') || c.includes('amazi')) {
+        return ['plumber', 'pipe', 'leak', 'bathroom', 'kitchen'];
+    }
+    if (c.includes('electr') || c.includes('amashanyarazi')) {
+        return ['electrician', 'wiring', 'electrical'];
+    }
+    if (c.includes('mechanic') || c.includes('auto') || c.includes('mecanic') || c.includes('umukanishi')) {
+        return ['mechanic', 'car repair', 'engine', 'auto', 'diagnostics'];
+    }
+    if (c.includes('creative') || c.includes('graphic') || c.includes('ubuhanzi')) {
+        return ['graphic', 'designer', 'design', 'logo', 'creative', 'branding'];
+    }
+    if (c.includes('construct') || c.includes('ubwubatsi') || c.includes('carpenter') || c.includes('painter') || c.includes('umubaji')) {
+        return ['construction', 'carpenter', 'painter', 'builder', 'woodworking'];
+    }
+    if (c.includes('office') || c.includes('ibiro') || c.includes('bureau') || c.includes('admin')) {
+        return ['admin', 'assistant', 'office', 'secretary', 'data entry'];
+    }
+    if (c.includes('health') || c.includes('ubuzima') || c.includes('sante') || c.includes('santé')) {
+        return ['health', 'nurse', 'doctor', 'care', 'medical'];
+    }
+    return [c];
+};
+
 // @desc    Get all jobs (with optional title, location & category filtering)
 // @route   GET /api/jobs
 // @access  Public
@@ -48,16 +87,32 @@ const getJobs = async (req, res) => {
             query.location = { $regex: location, $options: 'i' };
         }
 
-        // Filter by category name or group (e.g. "Education", "IT & Tech", "Home")
+        // Smart category matching: matches category doc, group, or job title/description keywords
         if (category) {
+            const keywords = getCategoryKeywords(category);
+            const searchTerms = [category, ...keywords];
+            const regexTerms = searchTerms.map(term => new RegExp(term, 'i'));
+
             const matchedCategories = await Category.find({
                 $or: [
-                    { name: { $regex: category, $options: 'i' } },
-                    { group: { $regex: category, $options: 'i' } }
+                    { name: { $in: regexTerms } },
+                    { group: { $in: regexTerms } }
                 ]
             }).select('_id');
             const categoryIds = matchedCategories.map(c => c._id);
-            query.category = { $in: categoryIds };
+
+            const matchConditions = [];
+            if (categoryIds.length > 0) {
+                matchConditions.push({ category: { $in: categoryIds } });
+            }
+            regexTerms.forEach(reg => {
+                matchConditions.push({ title: { $regex: reg } });
+                matchConditions.push({ description: { $regex: reg } });
+            });
+
+            if (matchConditions.length > 0) {
+                query.$or = matchConditions;
+            }
         }
 
         // Hide client/job phone from public/employee/employer listings

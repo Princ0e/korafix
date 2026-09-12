@@ -178,17 +178,17 @@ const Home = () => {
 
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                         {[
-                            { key: 'homeServices', group: 'Home' },
-                            { key: 'tech',         group: 'Technical' },
-                            { key: 'creative',     group: 'Creative' },
-                            { key: 'construction', group: 'Construction' },
-                            { key: 'mechanical',   group: 'Mechanical' },
-                            { key: 'office',       group: 'Office' },
-                            { key: 'health',       group: 'Healthcare' },
-                            { key: 'education',    group: 'Education' }
-                        ].map(({ key, group }, idx) => (
+                            { key: 'education',    category: 'Education' },
+                            { key: 'tech',         category: 'Web Developer' },
+                            { key: 'driver',       category: 'Driver & Transport' },
+                            { key: 'homeServices', category: 'Home' },
+                            { key: 'creative',     category: 'Creative' },
+                            { key: 'mechanical',   category: 'Mechanical' },
+                            { key: 'construction', category: 'Construction' },
+                            { key: 'office',       category: 'Office' }
+                        ].map(({ key, category }, idx) => (
                             <Link
-                                to={`/jobs?category=${encodeURIComponent(group)}`}
+                                to={`/jobs?category=${encodeURIComponent(category)}`}
                                 key={idx}
                                 className="group bg-white p-8 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-transparent hover:border-blue-100 transform hover:-translate-y-1 relative overflow-hidden"
                             >

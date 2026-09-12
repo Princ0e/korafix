@@ -37,6 +37,39 @@ const Jobs = () => {
     const [appliedJobs, setAppliedJobs] = useState([]);
     const [modal, setModal] = useState(null); // { type: 'success'|'info'|'error', title, message }
 
+    const matchesCategoryFilter = (job, catFilter) => {
+        if (!catFilter) return true;
+        const filter = catFilter.toLowerCase().trim();
+        const jobCat = typeof job.category === 'object' ? job.category?.name?.toLowerCase() : String(job.category || '').toLowerCase();
+        const title = (job.title || '').toLowerCase();
+        const desc = (job.description || '').toLowerCase();
+
+        // Direct match on category
+        if (jobCat.includes(filter) || filter.includes(jobCat)) return true;
+
+        // Education / Teaching
+        if (filter.includes('educat') || filter.includes('teach') || filter.includes('uburezi') || filter.includes('école')) {
+            return title.includes('teacher') || title.includes('teach') || title.includes('primary') || title.includes('tutor') || desc.includes('teacher') || desc.includes('french') || desc.includes('piano') || desc.includes('guitar');
+        }
+
+        // Web Developer / Tech
+        if (filter.includes('web') || filter.includes('tech') || filter.includes('ikoranabuhanga') || filter.includes('develop')) {
+            return title.includes('web') || title.includes('designer') || title.includes('developer') || desc.includes('website') || desc.includes('software');
+        }
+
+        // Driver / Transport
+        if (filter.includes('driver') || filter.includes('transport') || filter.includes('shoferi') || filter.includes('chauffeur')) {
+            return title.includes('driver') || title.includes('cab') || title.includes('taxi') || desc.includes('driving');
+        }
+
+        // Home / Cleaning
+        if (filter.includes('home') || filter.includes('rugo') || filter.includes('house')) {
+            return title.includes('house') || title.includes('helper') || title.includes('clean') || title.includes('plumb') || title.includes('electric');
+        }
+
+        return title.includes(filter) || desc.includes(filter);
+    };
+
     useEffect(() => {
         const fetchJobs = async () => {
             try {
@@ -45,14 +78,23 @@ const Jobs = () => {
                 const locationParam = searchParams.get('location');
                 const categoryParam = searchParams.get('category');
 
-                const { data } = await api.get('/jobs', {
+                let { data } = await api.get('/jobs', {
                     params: {
                         title: titleParam || undefined,
                         location: locationParam || undefined,
                         category: categoryParam || undefined
                     }
                 });
-                setJobs(data);
+
+                // Fallback: If category query returned empty from backend, fetch all open jobs and apply smart client filter
+                if (categoryParam && (!data || data.length === 0)) {
+                    const allRes = await api.get('/jobs');
+                    if (allRes.data && allRes.data.length > 0) {
+                        data = allRes.data.filter(j => matchesCategoryFilter(j, categoryParam));
+                    }
+                }
+
+                setJobs(data || []);
             } catch (err) {
                 console.error('Error fetching jobs:', err);
                 setError('Failed to load jobs. Please try again later.');
@@ -306,20 +348,23 @@ const Jobs = () => {
                 <p className="text-lg text-gray-500">{t('jobs.subtitle')}</p>
                 {new URLSearchParams(location.search).get('category') && (
                     <div className="mt-4 flex flex-wrap items-center justify-center gap-3">
-                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-full text-sm font-bold">
+                        <span className="inline-flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-800 rounded-full text-sm font-bold shadow-sm">
                             <span>📂</span>
-                            {new URLSearchParams(location.search).get('category')}
+                            <span>{new URLSearchParams(location.search).get('category')}</span>
+                            <span className="bg-blue-200 text-blue-900 text-xs px-2 py-0.5 rounded-full">
+                                {jobs.length} {jobs.length === 1 ? 'job available' : 'jobs available'}
+                            </span>
                             <button
                                 type="button"
                                 onClick={() => navigate('/jobs')}
-                                className="ml-1 text-blue-400 hover:text-blue-700 transition cursor-pointer font-bold"
+                                className="ml-1 text-blue-500 hover:text-red-600 transition cursor-pointer font-bold text-base"
                                 title="Clear filter"
                             >✕</button>
                         </span>
                         <button
                             type="button"
                             onClick={() => navigate('/jobs')}
-                            className="text-sm text-gray-400 hover:text-blue-600 underline transition"
+                            className="text-sm font-semibold text-blue-600 hover:text-blue-800 underline transition"
                         >
                             View all jobs
                         </button>

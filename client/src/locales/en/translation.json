@@ -46,19 +46,26 @@
         "education": "Education",
         "adminAssistant": "Admin Assistant",
         "webDeveloper": "Web Developer",
+        "driverAndTransport": "Driver & Transport",
+        "driver": "Driver & Transport",
+        "transport": "Driver & Transport",
         "plumber": "Plumber",
         "electrician": "Electrician",
         "carpenter": "Carpenter",
         "mechanic": "Mechanic",
         "graphicDesigner": "Graphic Designer",
         "houseHelper": "House Helper",
+        "painter": "Painter",
         "others": "Others"
     },
     "categoriesPage": {
         "title": "Explore Categories",
-        "subtitle": "Discover skilled professionals across various industries ready to help with your next project.",
-        "browseExperts": "Browse Experts",
-        "loading": "Loading..."
+        "subtitle": "Discover skilled professionals and available jobs across various industries.",
+        "browseExperts": "View Matching Jobs",
+        "jobsAvailable": "{{count}} job available",
+        "jobsAvailable_plural": "{{count}} jobs available",
+        "noJobsYet": "Open for postings",
+        "loading": "Loading categories..."
     },
     "dashboard": {
         "welcome": "Welcome back, {{name}}!",
