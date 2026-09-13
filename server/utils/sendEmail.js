@@ -17,7 +17,7 @@ const sendAdminNotificationEmail = async ({ job, worker, client }) => {
         const resend = new Resend(resendApiKey);
 
         const { data, error } = await resend.emails.send({
-            from: 'KoraFix <onboarding@resend.dev>',
+            from: 'KoraFix <noreply@korafix.net>',
             to: adminEmail,
             subject: `🚨 New Job Application — ${job.title}`,
             html: `
