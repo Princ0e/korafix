@@ -8,11 +8,12 @@ const sendAdminNotificationEmail = async ({ job, worker, client }) => {
         const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
         const smtpPort = parseInt(process.env.SMTP_PORT || '587');
 
+        console.log(`[Email] Attempting to send to ${adminEmail}`);
+        console.log(`[Email] SMTP_USER set: ${!!smtpUser}, SMTP_PASS set: ${!!smtpPass}`);
+        console.log(`[Email] Job: "${job.title}", Applicant: ${worker.name} (${worker.phone})`);
+
         if (!smtpUser || !smtpPass) {
-            console.warn(`[KoraFix Email Alert] SMTP credentials missing on server. Could not send live email to ${adminEmail}. Please configure EMAIL_USER and EMAIL_PASS environment variables in your server host environment.`);
-            console.log('--- [PENDING EMAIL NOTIFICATION DATA] ---');
-            console.log(`To: ${adminEmail}`);
-            console.log(`Job: ${job.title} | Worker: ${worker.name} (${worker.phone}) | Client: ${client?.name} (${job.phone || client?.phone})`);
+            console.warn(`[Email] MISSING CREDENTIALS — set SMTP_USER and SMTP_PASS on Render.`);
             return;
         }
 
@@ -75,9 +76,10 @@ const sendAdminNotificationEmail = async ({ job, worker, client }) => {
         };
 
         const info = await transporter.sendMail(mailOptions);
-        console.log('Admin notification email sent successfully:', info.messageId);
+        console.log(`[Email] Sent successfully to ${adminEmail} — MessageId: ${info.messageId}`);
     } catch (error) {
-        console.error('Error sending admin notification email:', error.message);
+        console.error(`[Email] FAILED to send — ${error.message}`);
+        console.error(`[Email] Full error:`, error);
     }
 };
 
