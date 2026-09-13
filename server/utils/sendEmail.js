@@ -20,7 +20,8 @@ const sendAdminNotificationEmail = async ({ job, worker, client }) => {
         const transporter = nodemailer.createTransport({
             host: smtpHost,
             port: smtpPort,
-            secure: smtpPort === 465, // true for 465, false for 587
+            secure: smtpPort === 465,
+            family: 4, // Force IPv4 — Render free tier does not support IPv6
             auth: {
                 user: smtpUser,
                 pass: smtpPass,
