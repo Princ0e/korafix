@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import AuthContext from '../context/AuthContext';
 import api from '../api/axios';
-import { Briefcase, MapPin, DollarSign, FileText, List, ArrowRight, User, Star } from 'lucide-react';
+import { Briefcase, MapPin, DollarSign, FileText, List, ArrowRight, User, Star, LogIn, UserPlus, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const PostJob = () => {
     const { t } = useTranslation();
     const navigate = useNavigate();
+    const { user, loading: authLoading } = useContext(AuthContext);
+
     const [formData, setFormData] = useState({
         title: '',
         description: '',
@@ -23,6 +26,7 @@ const PostJob = () => {
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
+        if (!user) return;
         const fetchData = async () => {
             try {
                 const [catRes, workerRes] = await Promise.all([
@@ -33,13 +37,97 @@ const PostJob = () => {
                 setWorkers(workerRes.data.slice(0, 3)); // Show top 3
             } catch (err) {
                 console.error('Error fetching data:', err);
-                // Removed setError(t('postJob.error')) here so it doesn't show by default if fetching fails
             } finally {
                 setLoadingWorkers(false);
             }
         };
         fetchData();
-    }, []);
+    }, [user]);
+
+    // Show auth gate if user is not logged in
+    if (!authLoading && !user) {
+        return (
+            <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+                {/* Header */}
+                <div className="text-center mb-10">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4">
+                        <Lock size={28} className="text-blue-600" />
+                    </div>
+                    <h1 className="text-3xl font-extrabold text-slate-900 mb-3">Post a Job on KoraFiks</h1>
+                    <p className="text-gray-500 text-lg max-w-md mx-auto">
+                        {t('auth.hireAuthNotice')}
+                    </p>
+                </div>
+
+                {/* Auth options */}
+                <div className="grid sm:grid-cols-2 gap-5 mb-8">
+                    {/* Login card */}
+                    <Link
+                        to="/login?redirect=/hire"
+                        className="group flex flex-col items-center p-8 bg-white rounded-2xl border-2 border-gray-200 hover:border-blue-500 hover:shadow-xl transition-all duration-300"
+                    >
+                        <div className="w-14 h-14 bg-blue-50 group-hover:bg-blue-600 rounded-2xl flex items-center justify-center mb-4 transition-colors duration-300">
+                            <LogIn size={26} className="text-blue-600 group-hover:text-white transition-colors duration-300" />
+                        </div>
+                        <h2 className="text-xl font-bold text-slate-900 mb-1">Log In</h2>
+                        <p className="text-sm text-gray-500 text-center">Already have an account? Sign in to post your job.</p>
+                        <span className="mt-4 inline-flex items-center text-blue-600 font-bold text-sm group-hover:underline">
+                            Sign In <ArrowRight size={16} className="ml-1" />
+                        </span>
+                    </Link>
+
+                    {/* Signup card */}
+                    <Link
+                        to="/signup?redirect=/hire"
+                        className="group flex flex-col items-center p-8 bg-white rounded-2xl border-2 border-gray-200 hover:border-emerald-500 hover:shadow-xl transition-all duration-300"
+                    >
+                        <div className="w-14 h-14 bg-emerald-50 group-hover:bg-emerald-500 rounded-2xl flex items-center justify-center mb-4 transition-colors duration-300">
+                            <UserPlus size={26} className="text-emerald-600 group-hover:text-white transition-colors duration-300" />
+                        </div>
+                        <h2 className="text-xl font-bold text-slate-900 mb-1">Sign Up</h2>
+                        <p className="text-sm text-gray-500 text-center">New here? Create a free account and get started.</p>
+                        <span className="mt-4 inline-flex items-center text-emerald-600 font-bold text-sm group-hover:underline">
+                            Create Account <ArrowRight size={16} className="ml-1" />
+                        </span>
+                    </Link>
+                </div>
+
+                {/* Why sign up hint */}
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-6 text-center">
+                    <h3 className="text-sm font-bold text-slate-700 uppercase tracking-wider mb-3">Why create an account?</h3>
+                    <div className="grid grid-cols-3 gap-4 text-xs text-gray-500">
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="w-8 h-8 bg-blue-100 rounded-xl flex items-center justify-center">
+                                <Briefcase size={16} className="text-blue-600" />
+                            </div>
+                            <span>Post jobs easily</span>
+                        </div>
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="w-8 h-8 bg-yellow-100 rounded-xl flex items-center justify-center">
+                                <Star size={16} className="text-yellow-600" />
+                            </div>
+                            <span>Find top talent</span>
+                        </div>
+                        <div className="flex flex-col items-center gap-2">
+                            <div className="w-8 h-8 bg-emerald-100 rounded-xl flex items-center justify-center">
+                                <User size={16} className="text-emerald-600" />
+                            </div>
+                            <span>Manage your hires</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+
+    // Still loading auth state
+    if (authLoading) {
+        return (
+            <div className="min-h-[400px] flex items-center justify-center">
+                <div className="w-10 h-10 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+            </div>
+        );
+    }
 
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
