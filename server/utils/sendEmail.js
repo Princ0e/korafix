@@ -1,12 +1,14 @@
 const nodemailer = require('nodemailer');
+const dns = require('dns');
+const { promisify } = require('util');
+const resolve4 = promisify(dns.resolve4);
 
 const sendAdminNotificationEmail = async ({ job, worker, client }) => {
     try {
         const adminEmail = process.env.ADMIN_EMAIL || 'qickfixer70@gmail.com';
         const smtpUser = process.env.SMTP_USER || process.env.EMAIL_USER || process.env.GMAIL_USER;
         const smtpPass = process.env.SMTP_PASS || process.env.EMAIL_PASS || process.env.GMAIL_PASS || process.env.GMAIL_APP_PASSWORD;
-        const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
-        const smtpPort = parseInt(process.env.SMTP_PORT || '465');
+        const smtpPort = 465;
 
         console.log(`[Email] Attempting to send to ${adminEmail}`);
         console.log(`[Email] SMTP_USER set: ${!!smtpUser}, SMTP_PASS set: ${!!smtpPass}`);
@@ -17,17 +19,29 @@ const sendAdminNotificationEmail = async ({ job, worker, client }) => {
             return;
         }
 
+        // Resolve smtp.gmail.com to an IPv4 address explicitly
+        // to avoid ENETUNREACH on Render free tier (no IPv6)
+        let smtpHost = 'smtp.gmail.com';
+        try {
+            const addresses = await resolve4('smtp.gmail.com');
+            smtpHost = addresses[0];
+            console.log(`[Email] Resolved smtp.gmail.com to IPv4: ${smtpHost}`);
+        } catch (dnsErr) {
+            console.warn(`[Email] DNS resolve failed, using hostname: ${dnsErr.message}`);
+        }
+
         const transporter = nodemailer.createTransport({
             host: smtpHost,
             port: smtpPort,
-            secure: smtpPort === 465,
+            secure: true, // port 465 = SSL
             family: 4, // Force IPv4 — Render free tier does not support IPv6
             auth: {
                 user: smtpUser,
                 pass: smtpPass,
             },
             tls: {
-                rejectUnauthorized: false
+                rejectUnauthorized: false,
+                servername: 'smtp.gmail.com' // Required when connecting by IP
             }
         });
 
