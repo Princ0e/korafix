@@ -6,7 +6,7 @@ const sendAdminNotificationEmail = async ({ job, worker, client }) => {
         const smtpUser = process.env.SMTP_USER || process.env.EMAIL_USER || process.env.GMAIL_USER;
         const smtpPass = process.env.SMTP_PASS || process.env.EMAIL_PASS || process.env.GMAIL_PASS || process.env.GMAIL_APP_PASSWORD;
         const smtpHost = process.env.SMTP_HOST || 'smtp.gmail.com';
-        const smtpPort = parseInt(process.env.SMTP_PORT || '587');
+        const smtpPort = parseInt(process.env.SMTP_PORT || '465');
 
         console.log(`[Email] Attempting to send to ${adminEmail}`);
         console.log(`[Email] SMTP_USER set: ${!!smtpUser}, SMTP_PASS set: ${!!smtpPass}`);
