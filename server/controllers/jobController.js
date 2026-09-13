@@ -234,5 +234,44 @@ const getJobFilters = async (req, res) => {
     }
 };
 
-module.exports = { createJob, getJobs, getJobById, applyForJob, getJobFilters };
+// @desc    Delete a job
+// @route   DELETE /api/jobs/:id
+// @access  Private (owner only)
+const deleteJob = async (req, res) => {
+    try {
+        const job = await Job.findById(req.params.id);
+
+        if (!job) {
+            return res.status(404).json({ message: 'Job not found' });
+        }
+
+        // Only the client who posted the job can delete it
+        if (!job.client || job.client.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: 'Not authorized to delete this job' });
+        }
+
+        await job.deleteOne();
+        res.json({ message: 'Job deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting job:', error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+// @desc    Get all jobs posted by the logged-in user
+// @route   GET /api/jobs/my-jobs
+// @access  Private
+const getMyJobs = async (req, res) => {
+    try {
+        const jobs = await Job.find({ client: req.user._id })
+            .populate('category', 'name')
+            .sort({ createdAt: -1 });
+        res.json(jobs);
+    } catch (error) {
+        console.error('Error fetching user jobs:', error);
+        res.status(500).json({ message: 'Server Error' });
+    }
+};
+
+module.exports = { createJob, getJobs, getJobById, applyForJob, getJobFilters, deleteJob, getMyJobs };
 
