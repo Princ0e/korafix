@@ -15,7 +15,7 @@ const Dashboard = () => {
     const [toast, setToast] = useState(null); // { type: 'success'|'error', message }
 
     useEffect(() => {
-        if (!user || user.role !== 'client') return;
+        if (!user) return;
         const fetchMyJobs = async () => {
             setLoadingJobs(true);
             try {
@@ -154,8 +154,8 @@ const Dashboard = () => {
                 )}
             </div>
 
-            {/* My Posted Jobs — clients only */}
-            {user.role === 'client' && (
+            {/* My Posted Jobs — visible to anyone who has posted jobs */}
+            {(loadingJobs || myJobs.length > 0) && (
                 <div>
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-2xl font-bold text-gray-900">My Posted Jobs</h2>
