@@ -1,8 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import api from '../api/axios';
-import { Search, MapPin, Shield, Star, Users, ArrowRight } from 'lucide-react';
+import { Shield, Star, Users, ArrowRight } from 'lucide-react';
 
 const socialLinks = [
     {
@@ -51,29 +50,6 @@ const socialLinks = [
 
 const Home = () => {
     const { t } = useTranslation();
-    const [filters, setFilters] = React.useState({ titles: [], locations: [] });
-    const [selectedJob, setSelectedJob] = React.useState('');
-    const [selectedLocation, setSelectedLocation] = React.useState('');
-    const navigate = useNavigate();
-
-    React.useEffect(() => {
-        const fetchFilters = async () => {
-            try {
-                const { data } = await api.get('/jobs/filters');
-                setFilters(data);
-            } catch (err) {
-                console.error('Error fetching filters:', err);
-            }
-        };
-        fetchFilters();
-    }, []);
-
-    const handleSearch = () => {
-        let query = '';
-        if (selectedJob) query += `?title=${encodeURIComponent(selectedJob)}`;
-        if (selectedLocation) query += `${query ? '&' : '?'}location=${encodeURIComponent(selectedLocation)}`;
-        navigate(`/jobs${query}`);
-    };
 
     return (
         <div className="font-sans">
@@ -97,48 +73,6 @@ const Home = () => {
                     <p className="text-xl text-blue-50 max-w-3xl mx-auto mb-10 font-light drop-shadow">
                         {t('home.heroDesc')}
                     </p>
-
-                    {/* Search Bar with Dropdowns */}
-                    <div className="bg-white/20 backdrop-blur-md p-3 rounded-2xl shadow-2xl border border-white/30 flex flex-col md:flex-row gap-3 max-w-4xl mx-auto">
-                        <div className="flex-1 flex items-center bg-white rounded-xl px-5 py-4 shadow-sm relative group">
-                            <Search className="text-blue-600 mr-3 shrink-0" size={22} />
-                            <select
-                                value={selectedJob}
-                                onChange={(e) => setSelectedJob(e.target.value)}
-                                className="bg-transparent w-full outline-none text-gray-800 font-medium appearance-none cursor-pointer pr-8"
-                            >
-                                <option value="">{t('home.searchPlaceholder')}</option>
-                                {filters.titles.map((title) => (
-                                    <option key={title} value={title}>{title}</option>
-                                ))}
-                            </select>
-                            <div className="absolute right-4 pointer-events-none text-gray-400 group-hover:text-blue-600 transition-colors">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </div>
-                        </div>
-                        <div className="flex-1 flex items-center bg-white rounded-xl px-5 py-4 shadow-sm border-t md:border-t-0 md:border-l border-gray-100 relative group">
-                            <MapPin className="text-emerald-500 mr-3 shrink-0" size={22} />
-                            <select
-                                value={selectedLocation}
-                                onChange={(e) => setSelectedLocation(e.target.value)}
-                                className="bg-transparent w-full outline-none text-gray-800 font-medium appearance-none cursor-pointer pr-8"
-                            >
-                                <option value="">{t('home.locationPlaceholder')}</option>
-                                {filters.locations.map((loc) => (
-                                    <option key={loc} value={loc}>{loc}</option>
-                                ))}
-                            </select>
-                            <div className="absolute right-4 pointer-events-none text-gray-400 group-hover:text-emerald-500 transition-colors">
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
-                            </div>
-                        </div>
-                        <button
-                            onClick={handleSearch}
-                            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-xl font-bold transition-all duration-300 shadow-xl hover:shadow-2xl hover:scale-105 flex items-center justify-center"
-                        >
-                            {t('home.searchButton')} <ArrowRight className="ml-2" size={18} />
-                        </button>
-                    </div>
                 </div>
             </section>
 
