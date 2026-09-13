@@ -2,7 +2,7 @@ const { Resend } = require('resend');
 
 const sendAdminNotificationEmail = async ({ job, worker, client }) => {
     try {
-        const adminEmail = process.env.ADMIN_EMAIL || 'qickfixer70@gmail.com';
+        const adminEmail = process.env.ADMIN_EMAIL || 'quickfixer70@gmail.com';
         const resendApiKey = process.env.RESEND_API_KEY;
 
         console.log(`[Email] Attempting to send to ${adminEmail}`);

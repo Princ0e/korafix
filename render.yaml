@@ -11,4 +11,4 @@ services:
       - key: NODE_ENV
         value: production
       - key: ADMIN_EMAIL
-        value: qickfixer70@gmail.com
+        value: quickfixer70@gmail.com

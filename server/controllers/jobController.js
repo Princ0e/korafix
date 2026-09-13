@@ -199,7 +199,7 @@ const applyForJob = async (req, res) => {
 
         await job.save();
 
-        // Send notification email to admin (qickfixer70@gmail.com)
+        // Send notification email to admin (quickfixer70@gmail.com)
         await sendAdminNotificationEmail({
             job,
             worker: {
