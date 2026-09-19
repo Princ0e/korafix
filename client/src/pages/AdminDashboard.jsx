@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
-import { Users, Briefcase, Phone, Mail, UserCheck, Clock, MapPin, Tag } from 'lucide-react';
+import { Users, Briefcase, Phone, Mail, UserCheck, Clock, MapPin, Tag, Trash2, X, AlertTriangle, CheckCircle } from 'lucide-react';
 
 const AdminDashboard = () => {
     const { t } = useTranslation();
@@ -10,7 +10,30 @@ const AdminDashboard = () => {
     const [serviceSeekers, setServiceSeekers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [deleteTarget, setDeleteTarget] = useState(null);
+    const [deleting, setDeleting] = useState(false);
+    const [toast, setToast] = useState(null);
     const navigate = useNavigate();
+
+    const showToast = (type, message) => {
+        setToast({ type, message });
+        setTimeout(() => setToast(null), 4000);
+    };
+
+    const handleDelete = async () => {
+        if (!deleteTarget) return;
+        setDeleting(true);
+        try {
+            await api.delete(`/jobs/${deleteTarget._id}`);
+            setServiceSeekers(prev => prev.filter(j => j._id !== deleteTarget._id));
+            showToast('success', `"${deleteTarget.title}" has been deleted.`);
+        } catch (err) {
+            showToast('error', err.response?.data?.message || 'Failed to delete job.');
+        } finally {
+            setDeleting(false);
+            setDeleteTarget(null);
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -49,6 +72,53 @@ const AdminDashboard = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+            {/* Toast */}
+            {toast && (
+                <div className={`fixed top-6 right-6 z-50 flex items-center gap-3 px-5 py-4 rounded-2xl shadow-xl border text-sm font-semibold transition-all duration-300 ${toast.type === 'success' ? 'bg-white border-green-200 text-green-800' : 'bg-white border-red-200 text-red-700'}`}>
+                    {toast.type === 'success'
+                        ? <CheckCircle size={18} className="text-green-500 shrink-0" />
+                        : <AlertTriangle size={18} className="text-red-500 shrink-0" />}
+                    {toast.message}
+                    <button onClick={() => setToast(null)} className="ml-2 text-gray-400 hover:text-gray-600"><X size={16} /></button>
+                </div>
+            )}
+
+            {/* Delete confirmation modal */}
+            {deleteTarget && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/70 backdrop-blur-sm">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-7">
+                        <div className="flex items-center gap-4 mb-4">
+                            <div className="w-12 h-12 bg-red-100 rounded-xl flex items-center justify-center shrink-0">
+                                <Trash2 size={22} className="text-red-600" />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-gray-900">Delete this job?</h3>
+                                <p className="text-sm text-gray-500 mt-0.5">This action cannot be undone.</p>
+                            </div>
+                        </div>
+                        <div className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 mb-6 text-sm font-semibold text-gray-800">
+                            "{deleteTarget.title}"
+                        </div>
+                        <div className="flex gap-3">
+                            <button
+                                onClick={() => setDeleteTarget(null)}
+                                disabled={deleting}
+                                className="flex-1 py-3 rounded-xl border border-gray-200 bg-gray-50 hover:bg-gray-100 text-gray-700 font-bold text-sm transition"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleDelete}
+                                disabled={deleting}
+                                className="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-sm transition disabled:opacity-50"
+                            >
+                                {deleting ? 'Deleting...' : 'Yes, Delete'}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className="flex items-center justify-between mb-8 pb-4 border-b border-gray-200">
                 <div>
                     <h1 className="text-3xl font-black text-gray-900 tracking-tight">{t('admin.dashboard')}</h1>
@@ -199,6 +269,16 @@ const AdminDashboard = () => {
                                                 })}
                                             </div>
                                         )}
+                                    </div>
+
+                                    {/* Admin Delete Button */}
+                                    <div className="mt-4 flex justify-end">
+                                        <button
+                                            onClick={() => setDeleteTarget(job)}
+                                            className="flex items-center gap-1.5 text-xs font-bold text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-2 rounded-lg transition border border-red-100 hover:border-red-200"
+                                        >
+                                            <Trash2 size={14} /> Delete Job
+                                        </button>
                                     </div>
                                 </div>
                             ))}

@@ -236,7 +236,7 @@ const getJobFilters = async (req, res) => {
 
 // @desc    Delete a job
 // @route   DELETE /api/jobs/:id
-// @access  Private (owner only)
+// @access  Private (owner or admin)
 const deleteJob = async (req, res) => {
     try {
         const job = await Job.findById(req.params.id);
@@ -245,8 +245,11 @@ const deleteJob = async (req, res) => {
             return res.status(404).json({ message: 'Job not found' });
         }
 
-        // Only the client who posted the job can delete it
-        if (!job.client || job.client.toString() !== req.user._id.toString()) {
+        // Allow admin or the client who posted the job
+        const isOwner = job.client && job.client.toString() === req.user._id.toString();
+        const isAdmin = req.user.role === 'admin';
+
+        if (!isOwner && !isAdmin) {
             return res.status(403).json({ message: 'Not authorized to delete this job' });
         }
 
