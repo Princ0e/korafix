@@ -152,6 +152,16 @@ const Dashboard = () => {
                         <p className="text-gray-500 text-sm">{t('dashboard.postJobDesc')}</p>
                     </Link>
                 )}
+
+                {user.role === 'admin' && (
+                    <Link to="/admin" className="bg-white p-6 rounded-xl shadow-sm border border-red-100 hover:shadow-md transition group">
+                        <div className="bg-red-50 p-3 rounded-lg w-fit text-red-600 mb-4 group-hover:bg-red-600 group-hover:text-white transition">
+                            <User size={24} />
+                        </div>
+                        <h3 className="font-bold text-lg text-gray-900 mb-2">Admin Panel</h3>
+                        <p className="text-gray-500 text-sm">Manage workers, jobs, and applicants.</p>
+                    </Link>
+                )}
             </div>
 
             {/* My Posted Jobs — visible to anyone who has posted jobs */}
