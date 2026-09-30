@@ -128,7 +128,45 @@ const syncCategoriesAndJobs = async () => {
             }
         }
 
-        console.log('[Sync] Category and job synchronization completed.');
+        // Ensure admin accounts have role 'admin'
+        const User = require('../models/User');
+        const adminEmails = [
+            'admin@example.com',
+            'qickfixer70@gmail.com',
+            'quickfixer70@gmail.com',
+            'princerukesha@gmail.com'
+        ];
+        if (process.env.ADMIN_EMAIL) {
+            adminEmails.push(process.env.ADMIN_EMAIL.toLowerCase().trim());
+        }
+
+        const adminUpdate = await User.updateMany(
+            {
+                $or: [
+                    { email: { $in: adminEmails } },
+                    { name: 'Admin User' }
+                ]
+            },
+            { role: 'admin' }
+        );
+        if (adminUpdate.modifiedCount > 0) {
+            console.log(`[Sync] Restored 'admin' role for ${adminUpdate.modifiedCount} user(s)`);
+        }
+
+        // Also ensure admin@example.com exists
+        const adminExists = await User.findOne({ email: 'admin@example.com' });
+        if (!adminExists) {
+            await User.create({
+                name: 'Admin User',
+                email: 'admin@example.com',
+                password: 'password123',
+                role: 'admin',
+                phone: '1234567890'
+            });
+            console.log('[Sync] Created default admin user admin@example.com');
+        }
+
+        console.log('[Sync] Category, job, and admin synchronization completed.');
     } catch (error) {
         console.error('[Sync] Error during syncCategoriesAndJobs:', error.message);
     }

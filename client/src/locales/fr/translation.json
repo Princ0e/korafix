@@ -130,6 +130,7 @@
         "clientName": "Nom de l'Employeur"
     },
     "auth": {
+        "hireAuthNotice": "Veuillez vous connecter ou créer un compte pour publier une offre et embaucher un talent.",
         "signInTitle": "Connectez-vous à votre compte",
         "createAccount": "créer un nouveau compte",
         "or": "Ou",

@@ -130,6 +130,7 @@
         "clientName": "Employer Name"
     },
     "auth": {
+        "hireAuthNotice": "Please sign in or create an account to post a job and hire talent.",
         "signInTitle": "Sign in to your account",
         "createAccount": "create a new account",
         "or": "Or",

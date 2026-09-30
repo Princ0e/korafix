@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AuthContext from '../context/AuthContext';
+import { isAdminUser } from '../utils/auth';
 import { Menu, X, User, ChevronDown } from 'lucide-react';
 
 const Navbar = () => {
@@ -23,6 +24,7 @@ const Navbar = () => {
     };
 
     const currentLang = i18n.language?.slice(0, 2) || 'en';
+    const isAdmin = isAdminUser(user);
 
     return (
         <nav className="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-gray-100 transition-all duration-300">
@@ -39,7 +41,7 @@ const Navbar = () => {
 
                     <div className="hidden md:flex items-center space-x-8">
                         <Link to="/jobs" className="text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition px-4 py-2 rounded-lg text-sm font-semibold">{t('navbar.findWork')}</Link>
-                        <Link to="/hire" className="text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition px-4 py-2 rounded-lg text-sm font-semibold">{t('navbar.hireTalent')}</Link>
+                        <Link to={user ? "/hire" : "/login?redirect=/hire"} className="text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition px-4 py-2 rounded-lg text-sm font-semibold">{t('navbar.hireTalent')}</Link>
                         <Link to="/categories" className="text-gray-600 hover:text-blue-600 hover:bg-blue-50 transition px-4 py-2 rounded-lg text-sm font-semibold">{t('navbar.categories')}</Link>
                     </div>
 
@@ -61,8 +63,8 @@ const Navbar = () => {
 
                         {user ? (
                             <div className="flex items-center space-x-4">
-                                {user.role === 'admin' && (
-                                    <Link to="/admin" className="text-red-600 hover:text-red-700 font-medium px-3 py-1 bg-red-50 rounded-lg">{t('navbar.adminPanel')}</Link>
+                                {isAdmin && (
+                                    <Link to="/admin" className="text-red-600 hover:text-red-700 font-bold px-3 py-1.5 bg-red-50 hover:bg-red-100 rounded-lg text-sm transition">{t('navbar.adminPanel')}</Link>
                                 )}
                                 <Link to="/dashboard" className="text-gray-600 hover:text-primary font-medium">{t('navbar.dashboard')}</Link>
                                 <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-600 to-blue-600 flex items-center justify-center text-white shadow-md cursor-pointer hover:shadow-lg transition" title={user.name}>
@@ -91,7 +93,7 @@ const Navbar = () => {
                 <div className="md:hidden bg-white border-t border-gray-100">
                     <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
                         <Link to="/jobs" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50">{t('navbar.findWork')}</Link>
-                        <Link to="/hire" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50">{t('navbar.hireTalent')}</Link>
+                        <Link to={user ? "/hire" : "/login?redirect=/hire"} className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50">{t('navbar.hireTalent')}</Link>
                         <Link to="/categories" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50">{t('navbar.categories')}</Link>
 
                         {/* Mobile Language Selector Dropdown */}
@@ -116,8 +118,8 @@ const Navbar = () => {
                         <div className="border-t border-gray-200 mt-4 pt-4">
                             {user ? (
                                 <>
-                                    {user.role === 'admin' && (
-                                        <Link to="/admin" className="block px-3 py-2 rounded-md text-base font-medium text-red-600 hover:bg-red-50">{t('navbar.adminPanel')}</Link>
+                                    {isAdmin && (
+                                        <Link to="/admin" className="block px-3 py-2 rounded-md text-base font-bold text-red-600 hover:bg-red-50">{t('navbar.adminPanel')}</Link>
                                     )}
                                     <Link to="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700">{t('navbar.dashboard')}</Link>
                                     <button onClick={handleLogout} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-500">{t('navbar.logout')}</button>

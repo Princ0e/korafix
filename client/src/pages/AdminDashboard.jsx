@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import api from '../api/axios';
 import { useNavigate } from 'react-router-dom';
+import { isAdminUser } from '../utils/auth';
 import { Users, Briefcase, Phone, Mail, UserCheck, Clock, MapPin, Tag, Trash2, X, AlertTriangle, CheckCircle } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -41,12 +42,12 @@ const AdminDashboard = () => {
                 const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
                 if (!userInfo || !userInfo.token) {
-                    navigate('/login');
+                    navigate('/login?redirect=/admin');
                     return;
                 }
 
-                if (userInfo.role !== 'admin') {
-                    navigate('/'); // Redirect non-admins
+                if (!isAdminUser(userInfo)) {
+                    navigate('/login?redirect=/admin'); // Redirect non-admins to admin login
                     return;
                 }
 
@@ -68,7 +69,21 @@ const AdminDashboard = () => {
     }, [navigate]);
 
     if (loading) return <div className="text-center py-20 text-gray-500 font-medium">Loading Admin Dashboard...</div>;
-    if (error) return <div className="text-center py-20 text-red-500 font-bold">{error}</div>;
+    if (error) return (
+        <div className="max-w-md mx-auto text-center py-20 px-4">
+            <div className="w-16 h-16 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 text-red-600">
+                <AlertTriangle size={32} />
+            </div>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Admin Access Required</h2>
+            <p className="text-gray-500 text-sm mb-6">{error}</p>
+            <button
+                onClick={() => navigate('/login?redirect=/admin')}
+                className="bg-blue-600 text-white font-bold px-6 py-2.5 rounded-xl hover:bg-blue-700 transition shadow-sm"
+            >
+                Log In as Admin
+            </button>
+        </div>
+    );
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">

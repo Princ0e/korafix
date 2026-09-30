@@ -130,6 +130,7 @@
         "clientName": "Izina ry'Umukoresha"
     },
     "auth": {
+        "hireAuthNotice": "Banza winjire cyangwa wiyandikishe kugira ngo ushireho akazi kandi ukoreshe impuguke.",
         "signInTitle": "Injira muri konti yawe",
         "createAccount": "fungura konti nshya",
         "or": "Cyangwa",

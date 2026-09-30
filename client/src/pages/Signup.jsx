@@ -39,12 +39,26 @@ const Signup = () => {
             <div className="sm:mx-auto sm:w-full sm:max-w-md">
                 <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">{t('auth.createAccountTitle')}</h2>
                 <p className="mt-2 text-center text-sm text-gray-600">
-                    {t('auth.haveAccount')} <Link to="/login" className="font-medium text-secondary hover:text-blue-500">{t('auth.signInLink')}</Link>
+                    {t('auth.haveAccount')}{' '}
+                    <Link
+                        to={redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : '/login'}
+                        className="font-medium text-blue-600 hover:text-blue-500 underline"
+                    >
+                        {t('auth.signInLink')}
+                    </Link>
                 </p>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
                 <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+                    {redirect === '/hire' && (
+                        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl text-center">
+                            <div className="text-2xl mb-1">💼</div>
+                            <p className="text-sm font-bold text-blue-900">
+                                {t('auth.hireAuthNotice')}
+                            </p>
+                        </div>
+                    )}
                     {error && <div className="bg-red-50 text-red-600 p-3 mb-4 rounded-md text-sm">{error}</div>}
                     <form className="space-y-6" onSubmit={handleSubmit}>
                         <div>

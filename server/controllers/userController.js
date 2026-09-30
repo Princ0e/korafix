@@ -18,6 +18,24 @@ const authUser = async (req, res) => {
         const user = await User.findOne({ email });
 
         if (user && (await user.matchPassword(password))) {
+            const adminEmails = [
+                'admin@example.com',
+                'qickfixer70@gmail.com',
+                'quickfixer70@gmail.com',
+                'princerukesha@gmail.com'
+            ];
+            if (process.env.ADMIN_EMAIL) {
+                adminEmails.push(process.env.ADMIN_EMAIL.toLowerCase().trim());
+            }
+
+            const userEmail = (user.email || '').toLowerCase().trim();
+            if (adminEmails.includes(userEmail) || user.name === 'Admin User') {
+                if (user.role !== 'admin') {
+                    user.role = 'admin';
+                    await user.save();
+                }
+            }
+
             res.json({
                 _id: user._id,
                 name: user.name,
