@@ -34,14 +34,18 @@ const admin = (req, res, next) => {
     const adminEmails = [
         'admin@example.com',
         'qickfixer70@gmail.com',
-        'quickfixer70@gmail.com',
-        'princerukesha@gmail.com'
+        'quickfixer70@gmail.com'
     ];
     if (process.env.ADMIN_EMAIL) {
         adminEmails.push(process.env.ADMIN_EMAIL.toLowerCase().trim());
     }
 
     const email = req.user?.email ? req.user.email.toLowerCase().trim() : '';
+
+    if (email === 'princerukesha@gmail.com') {
+        return res.status(401).json({ message: 'Not authorized as an admin' });
+    }
+
     const isAdmin = req.user && (
         req.user.role === 'admin' ||
         adminEmails.includes(email) ||

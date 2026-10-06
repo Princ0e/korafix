@@ -41,7 +41,7 @@ export const AuthProvider = ({ children }) => {
             const normalized = normalizeUser(data);
             setUser(normalized);
             localStorage.setItem('userInfo', JSON.stringify(normalized));
-            return { success: true };
+            return { success: true, user: normalized };
         } catch (error) {
             console.error('Login error:', error);
             return {
@@ -57,7 +57,7 @@ export const AuthProvider = ({ children }) => {
             const normalized = normalizeUser(data);
             setUser(normalized);
             localStorage.setItem('userInfo', JSON.stringify(normalized));
-            return { success: true };
+            return { success: true, user: normalized };
         } catch (error) {
             console.error('Signup error:', error);
             return {

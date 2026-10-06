@@ -133,12 +133,23 @@ const syncCategoriesAndJobs = async () => {
         const adminEmails = [
             'admin@example.com',
             'qickfixer70@gmail.com',
-            'quickfixer70@gmail.com',
-            'princerukesha@gmail.com'
+            'quickfixer70@gmail.com'
         ];
         if (process.env.ADMIN_EMAIL) {
             adminEmails.push(process.env.ADMIN_EMAIL.toLowerCase().trim());
         }
+
+        // Revert employer account to client role if it was accidentally marked admin
+        await User.updateMany(
+            {
+                $or: [
+                    { email: 'princerukesha@gmail.com' },
+                    { name: 'PrinceRukesha' },
+                    { name: 'rukesha' }
+                ]
+            },
+            { role: 'client' }
+        );
 
         const adminUpdate = await User.updateMany(
             {
