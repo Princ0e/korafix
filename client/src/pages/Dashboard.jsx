@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AuthContext from '../context/AuthContext';
 import api from '../api/axios';
-import { Briefcase, Search, User, MapPin, Trash2, Plus, AlertTriangle, X, CheckCircle, Shield } from 'lucide-react';
+import { Briefcase, Search, User, MapPin, Trash2, Plus, AlertTriangle, X, CheckCircle, Shield, Star } from 'lucide-react';
 
 const Dashboard = () => {
     const { user } = useContext(AuthContext);
@@ -15,6 +15,8 @@ const Dashboard = () => {
     const [toast, setToast] = useState(null);
 
     const isAdmin = user?.role === 'admin';
+    const isWorker = user?.role === 'worker';
+    const isClient = user?.role === 'client';
 
     useEffect(() => {
         if (!user) return;
@@ -112,10 +114,8 @@ const Dashboard = () => {
                     </div>
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900">{t('dashboard.welcome', { name: user.name })}</h1>
-                        <p className="text-gray-500 mt-1 font-medium">
-                            {isAdmin ? '👑 Administrator' :
-                                user.role === 'client' ? t('auth.clientRole') :
-                                user.role === 'worker' ? t('auth.workerRole') : user.role}
+                        <p className="text-gray-500 mt-1 font-medium capitalize">
+                            {isAdmin ? '👑 Administrator' : isWorker ? '🛠️ Employee Account' : '💼 Employer Account'}
                         </p>
                     </div>
                 </div>
@@ -124,6 +124,8 @@ const Dashboard = () => {
             {/* Quick actions */}
             <h2 className="text-2xl font-bold text-gray-900 mb-6">{t('dashboard.quickActions')}</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+
+                {/* Browse categories — everyone */}
                 <Link to="/categories" className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition group">
                     <div className="bg-indigo-50 p-3 rounded-lg w-fit text-indigo-600 mb-4 group-hover:bg-indigo-600 group-hover:text-white transition">
                         <Search size={24} />
@@ -132,7 +134,8 @@ const Dashboard = () => {
                     <p className="text-gray-500 text-sm">{t('dashboard.browseCategoriesDesc')}</p>
                 </Link>
 
-                {user.role === 'client' && (
+                {/* Post a job — clients only */}
+                {isClient && (
                     <Link to="/hire" className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition group">
                         <div className="bg-blue-50 p-3 rounded-lg w-fit text-blue-600 mb-4 group-hover:bg-blue-600 group-hover:text-white transition">
                             <Briefcase size={24} />
@@ -142,6 +145,29 @@ const Dashboard = () => {
                     </Link>
                 )}
 
+                {/* Find work — workers */}
+                {isWorker && (
+                    <Link to="/jobs" className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition group">
+                        <div className="bg-emerald-50 p-3 rounded-lg w-fit text-emerald-600 mb-4 group-hover:bg-emerald-600 group-hover:text-white transition">
+                            <Search size={24} />
+                        </div>
+                        <h3 className="font-bold text-lg text-gray-900 mb-2">Find Work</h3>
+                        <p className="text-gray-500 text-sm">Browse open jobs and apply for opportunities.</p>
+                    </Link>
+                )}
+
+                {/* Post skills — workers */}
+                {isWorker && (
+                    <Link to="/worker-info" className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition group">
+                        <div className="bg-yellow-50 p-3 rounded-lg w-fit text-yellow-600 mb-4 group-hover:bg-yellow-600 group-hover:text-white transition">
+                            <Star size={24} />
+                        </div>
+                        <h3 className="font-bold text-lg text-gray-900 mb-2">Update My Skills</h3>
+                        <p className="text-gray-500 text-sm">Keep your profile up to date to attract employers.</p>
+                    </Link>
+                )}
+
+                {/* Admin panel — admins only */}
                 {isAdmin && (
                     <Link to="/admin" className="bg-white p-6 rounded-xl shadow-sm border border-red-200 hover:shadow-md transition group">
                         <div className="bg-red-100 p-3 rounded-lg w-fit text-red-600 mb-4 group-hover:bg-red-600 group-hover:text-white transition">
@@ -153,53 +179,55 @@ const Dashboard = () => {
                 )}
             </div>
 
-            {/* My Posted Jobs */}
-            <div>
-                <div className="flex items-center justify-between mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900">My Posted Jobs</h2>
-                    <Link to="/hire" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl transition shadow-sm">
-                        <Plus size={16} /> Post New Job
-                    </Link>
-                </div>
+            {/* My Posted Jobs — shown only when user has jobs or is a client/admin */}
+            {(isClient || isAdmin || myJobs.length > 0) && (
+                <div>
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-2xl font-bold text-gray-900">My Posted Jobs</h2>
+                        <Link to="/hire" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl transition shadow-sm">
+                            <Plus size={16} /> Post New Job
+                        </Link>
+                    </div>
 
-                {loadingJobs ? (
-                    <div className="text-center py-16 text-gray-400 font-medium">Loading your jobs...</div>
-                ) : myJobs.length === 0 ? (
-                    <div className="bg-white border border-dashed border-gray-200 rounded-2xl py-16 text-center">
-                        <Briefcase size={40} className="mx-auto text-gray-300 mb-3" />
-                        <p className="text-gray-500 font-medium">You haven't posted any jobs yet.</p>
-                        <Link to="/hire" className="inline-block mt-4 text-blue-600 font-bold text-sm hover:underline">Post your first job →</Link>
-                    </div>
-                ) : (
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        {myJobs.map(job => (
-                            <div key={job._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all flex flex-col">
-                                <div className="p-5 flex-grow">
-                                    <div className="flex items-start justify-between gap-2 mb-3">
-                                        <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${statusColors[job.status] || statusColors['Open']}`}>{job.status}</span>
-                                        <span className="text-xs text-gray-400">{new Date(job.createdAt).toLocaleDateString()}</span>
+                    {loadingJobs ? (
+                        <div className="text-center py-16 text-gray-400 font-medium">Loading your jobs...</div>
+                    ) : myJobs.length === 0 ? (
+                        <div className="bg-white border border-dashed border-gray-200 rounded-2xl py-16 text-center">
+                            <Briefcase size={40} className="mx-auto text-gray-300 mb-3" />
+                            <p className="text-gray-500 font-medium">You haven't posted any jobs yet.</p>
+                            <Link to="/hire" className="inline-block mt-4 text-blue-600 font-bold text-sm hover:underline">Post your first job →</Link>
+                        </div>
+                    ) : (
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            {myJobs.map(job => (
+                                <div key={job._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all flex flex-col">
+                                    <div className="p-5 flex-grow">
+                                        <div className="flex items-start justify-between gap-2 mb-3">
+                                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border ${statusColors[job.status] || statusColors['Open']}`}>{job.status}</span>
+                                            <span className="text-xs text-gray-400">{new Date(job.createdAt).toLocaleDateString()}</span>
+                                        </div>
+                                        <h3 className="font-bold text-gray-900 text-base mb-1 leading-tight">{job.title}</h3>
+                                        {job.category?.name && (
+                                            <span className="inline-block text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-0.5 rounded mb-2">{job.category.name}</span>
+                                        )}
+                                        <p className="text-gray-500 text-sm line-clamp-2 mb-3">{job.description}</p>
+                                        <div className="flex items-center gap-4 text-xs text-gray-400">
+                                            {job.location && <span className="flex items-center gap-1"><MapPin size={12} /> {job.location}</span>}
+                                            {job.budget && <span className="font-semibold text-green-600">{Number(job.budget).toLocaleString()} RWF</span>}
+                                        </div>
                                     </div>
-                                    <h3 className="font-bold text-gray-900 text-base mb-1 leading-tight">{job.title}</h3>
-                                    {job.category?.name && (
-                                        <span className="inline-block text-xs text-blue-600 font-semibold bg-blue-50 px-2 py-0.5 rounded mb-2">{job.category.name}</span>
-                                    )}
-                                    <p className="text-gray-500 text-sm line-clamp-2 mb-3">{job.description}</p>
-                                    <div className="flex items-center gap-4 text-xs text-gray-400">
-                                        {job.location && <span className="flex items-center gap-1"><MapPin size={12} /> {job.location}</span>}
-                                        {job.budget && <span className="font-semibold text-green-600">{Number(job.budget).toLocaleString()} RWF</span>}
+                                    <div className="px-5 py-4 border-t border-gray-100 flex items-center justify-between">
+                                        <span className="text-xs text-gray-400">{job.applicants?.length || 0} applicant{job.applicants?.length !== 1 ? 's' : ''}</span>
+                                        <button onClick={() => setDeleteTarget(job)} className="flex items-center gap-1.5 text-xs font-bold text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-lg transition">
+                                            <Trash2 size={14} /> Delete
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="px-5 py-4 border-t border-gray-100 flex items-center justify-between">
-                                    <span className="text-xs text-gray-400">{job.applicants?.length || 0} applicant{job.applicants?.length !== 1 ? 's' : ''}</span>
-                                    <button onClick={() => setDeleteTarget(job)} className="flex items-center gap-1.5 text-xs font-bold text-red-500 hover:text-red-700 hover:bg-red-50 px-3 py-1.5 rounded-lg transition">
-                                        <Trash2 size={14} /> Delete
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                )}
-            </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
         </div>
     );
 };
