@@ -64,11 +64,9 @@ const Navbar = () => {
                         {user ? (
                             <div className="flex items-center space-x-4">
                                 {isAdmin && (
-                                    <>
                                         <Link to="/admin" className="text-red-600 hover:text-red-700 font-bold px-3 py-1.5 bg-red-50 hover:bg-red-100 rounded-lg text-sm transition">{t('navbar.adminPanel')}</Link>
-                                        <Link to="/dashboard" className="text-gray-600 hover:text-primary font-medium">{t('navbar.dashboard')}</Link>
-                                    </>
                                 )}
+                                <Link to="/dashboard" className="text-gray-600 hover:text-blue-600 hover:bg-blue-50 font-semibold px-3 py-1.5 rounded-lg text-sm transition">{t("navbar.dashboard")}</Link>
                                 <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-600 to-blue-600 flex items-center justify-center text-white shadow-md cursor-pointer hover:shadow-lg transition" title={user.name}>
                                     <User size={20} />
                                 </div>
@@ -121,11 +119,9 @@ const Navbar = () => {
                             {user ? (
                                 <>
                                     {isAdmin && (
-                                        <>
                                             <Link to="/admin" className="block px-3 py-2 rounded-md text-base font-bold text-red-600 hover:bg-red-50">{t('navbar.adminPanel')}</Link>
-                                            <Link to="/dashboard" className="block px-3 py-2 rounded-md text-base font-medium text-gray-700">{t('navbar.dashboard')}</Link>
-                                        </>
                                     )}
+                                    <Link to="/dashboard" className="text-gray-600 hover:text-blue-600 hover:bg-blue-50 font-semibold px-3 py-1.5 rounded-lg text-sm transition">{t("navbar.dashboard")}</Link>
                                     <button onClick={handleLogout} className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-500">{t('navbar.logout')}</button>
                                 </>
                             ) : (
