@@ -1,6 +1,5 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -14,32 +13,8 @@ const generateToken = (id) => {
 const authUser = async (req, res) => {
     try {
         const { email, password } = req.body;
-
         const user = await User.findOne({ email });
-
         if (user && (await user.matchPassword(password))) {
-            const adminEmails = [
-                'admin@example.com',
-                'qickfixer70@gmail.com',
-                'quickfixer70@gmail.com'
-            ];
-            if (process.env.ADMIN_EMAIL) {
-                adminEmails.push(process.env.ADMIN_EMAIL.toLowerCase().trim());
-            }
-
-            const userEmail = (user.email || '').toLowerCase().trim();
-            if (userEmail === 'princerukesha@gmail.com') {
-                if (user.role !== 'client') {
-                    user.role = 'client';
-                    await user.save();
-                }
-            } else if (adminEmails.includes(userEmail) || user.name === 'Admin User') {
-                if (user.role !== 'admin') {
-                    user.role = 'admin';
-                    await user.save();
-                }
-            }
-
             res.json({
                 _id: user._id,
                 name: user.name,
@@ -62,26 +37,21 @@ const authUser = async (req, res) => {
 const registerUser = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
-
         if (!name || !email || !password) {
             res.status(400).json({ message: 'Please provide all required fields' });
             return;
         }
-
         const userExists = await User.findOne({ email: email.toLowerCase().trim() });
-
         if (userExists) {
             res.status(400).json({ message: 'User already exists with this email' });
             return;
         }
-
         const user = await User.create({
             name,
             email: email.toLowerCase().trim(),
             password,
             role: role || 'client',
         });
-
         if (user) {
             res.status(201).json({
                 _id: user._id,
@@ -105,7 +75,6 @@ const registerUser = async (req, res) => {
 const getUserProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
-
         if (user) {
             res.json({
                 _id: user._id,
@@ -132,7 +101,6 @@ const getUserProfile = async (req, res) => {
 const updateUserProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user._id);
-
         if (user) {
             user.name = req.body.name || user.name;
             user.email = req.body.email || user.email;
@@ -145,9 +113,7 @@ const updateUserProfile = async (req, res) => {
             user.skills = req.body.skills !== undefined ? req.body.skills : user.skills;
             if (req.body.phone) user.phone = req.body.phone;
             if (req.body.role) user.role = req.body.role;
-
             const updatedUser = await user.save();
-
             res.json({
                 _id: updatedUser._id,
                 name: updatedUser.name,
