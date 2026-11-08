@@ -1,5 +1,6 @@
-{
+﻿{
     "navbar": {
+        "viewProfessionals": "Voir les Professionnels",
         "findWork": "Trouver du Travail",
         "hireTalent": "Embaucher",
         "categories": "Catégories",
