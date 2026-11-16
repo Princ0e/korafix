@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AuthContext from '../context/AuthContext';
 import api from '../api/axios';
-import { Briefcase, Search, User, MapPin, Trash2, Plus, AlertTriangle, X, CheckCircle, Shield, Star } from 'lucide-react';
+import { Briefcase, Search, User, MapPin, Trash2, Plus, AlertTriangle, X, CheckCircle, Shield, Star, Send, Inbox, Clock } from 'lucide-react';
 
 const Dashboard = () => {
     const { user } = useContext(AuthContext);
@@ -13,6 +13,12 @@ const Dashboard = () => {
     const [deleteTarget, setDeleteTarget] = useState(null);
     const [deleting, setDeleting] = useState(false);
     const [toast, setToast] = useState(null);
+
+    // Hire requests
+    const [sentHireRequests, setSentHireRequests] = useState([]);
+    const [receivedHireRequests, setReceivedHireRequests] = useState([]);
+    const [loadingHire, setLoadingHire] = useState(false);
+    const [updatingHire, setUpdatingHire] = useState(null); // id of request being updated
 
     const isAdmin = user?.role === 'admin';
     const isWorker = user?.role === 'worker';
@@ -31,7 +37,27 @@ const Dashboard = () => {
                 setLoadingJobs(false);
             }
         };
+
+        const fetchHireRequests = async () => {
+            setLoadingHire(true);
+            try {
+                if (isClient || isAdmin) {
+                    const { data } = await api.get('/hire/sent');
+                    setSentHireRequests(data);
+                }
+                if (isWorker || isAdmin) {
+                    const { data } = await api.get('/hire/received');
+                    setReceivedHireRequests(data);
+                }
+            } catch (err) {
+                console.error('Error fetching hire requests:', err);
+            } finally {
+                setLoadingHire(false);
+            }
+        };
+
         fetchJobs();
+        fetchHireRequests();
     }, [user]);
 
     const showToast = (type, message) => {
@@ -54,6 +80,23 @@ const Dashboard = () => {
         }
     };
 
+    const handleHireStatusUpdate = async (requestId, status) => {
+        setUpdatingHire(requestId);
+        try {
+            const { data } = await api.put(`/hire/${requestId}`, { status });
+            if (isWorker) {
+                setReceivedHireRequests(prev => prev.map(r => r._id === requestId ? data : r));
+            } else {
+                setSentHireRequests(prev => prev.map(r => r._id === requestId ? data : r));
+            }
+            showToast('success', `Request ${status.toLowerCase()} successfully.`);
+        } catch (err) {
+            showToast('error', err.response?.data?.message || 'Failed to update request.');
+        } finally {
+            setUpdatingHire(null);
+        }
+    };
+
     if (!user) {
         return (
             <div className="max-w-md mx-auto my-20 p-8 text-center bg-white rounded-2xl shadow-sm border border-gray-100">
@@ -70,6 +113,20 @@ const Dashboard = () => {
         'In Progress': 'bg-yellow-50 text-yellow-700 border-yellow-200',
         'Completed': 'bg-gray-100 text-gray-600 border-gray-200',
         'Cancelled': 'bg-red-50 text-red-600 border-red-200',
+    };
+
+    const hireStatusColors = {
+        'Pending':   'bg-yellow-50 text-yellow-700 border-yellow-200',
+        'Accepted':  'bg-green-50 text-green-700 border-green-200',
+        'Declined':  'bg-red-50 text-red-600 border-red-200',
+        'Completed': 'bg-gray-100 text-gray-600 border-gray-200',
+    };
+
+    const hireStatusIcon = {
+        'Pending':   <Clock size={12} className="inline mr-1" />,
+        'Accepted':  <CheckCircle size={12} className="inline mr-1" />,
+        'Declined':  <X size={12} className="inline mr-1" />,
+        'Completed': <CheckCircle size={12} className="inline mr-1" />,
     };
 
     return (
@@ -181,7 +238,7 @@ const Dashboard = () => {
 
             {/* My Posted Jobs — shown only when user has jobs or is a client/admin */}
             {(isClient || isAdmin || myJobs.length > 0) && (
-                <div>
+                <div className="mb-12">
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-2xl font-bold text-gray-900">My Posted Jobs</h2>
                         <Link to="/hire" className="inline-flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold px-4 py-2.5 rounded-xl transition shadow-sm">
@@ -222,6 +279,131 @@ const Dashboard = () => {
                                             <Trash2 size={14} /> Delete
                                         </button>
                                     </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* Hire Requests Sent — employers & admins */}
+            {(isClient || isAdmin) && (
+                <div className="mb-12">
+                    <div className="flex items-center gap-3 mb-6">
+                        <Send size={22} className="text-blue-600" />
+                        <h2 className="text-2xl font-bold text-gray-900">Hire Requests Sent</h2>
+                        <span className="ml-auto text-xs text-gray-400 font-medium">
+                            {sentHireRequests.length} request{sentHireRequests.length !== 1 ? 's' : ''}
+                        </span>
+                    </div>
+
+                    {loadingHire ? (
+                        <div className="text-center py-12 text-gray-400 font-medium">Loading hire requests...</div>
+                    ) : sentHireRequests.length === 0 ? (
+                        <div className="bg-white border border-dashed border-gray-200 rounded-2xl py-14 text-center">
+                            <Send size={36} className="mx-auto text-gray-300 mb-3" />
+                            <p className="text-gray-500 font-medium">No hire requests sent yet.</p>
+                            <Link to="/workers" className="inline-block mt-3 text-blue-600 font-bold text-sm hover:underline">Browse professionals →</Link>
+                        </div>
+                    ) : (
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            {sentHireRequests.map(req => (
+                                <div key={req._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all flex flex-col">
+                                    <div className="p-5 flex-grow">
+                                        <div className="flex items-start justify-between gap-2 mb-3">
+                                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border flex items-center ${hireStatusColors[req.status]}`}>
+                                                {hireStatusIcon[req.status]}{req.status}
+                                            </span>
+                                            <span className="text-xs text-gray-400">{new Date(req.createdAt).toLocaleDateString()}</span>
+                                        </div>
+                                        <h3 className="font-bold text-gray-900 text-base mb-1 leading-tight">{req.title}</h3>
+                                        <p className="text-xs text-blue-600 font-semibold mb-2">
+                                            To: {req.worker?.name || 'Professional'}
+                                        </p>
+                                        <p className="text-gray-500 text-sm line-clamp-2 mb-3">{req.description}</p>
+                                        <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400">
+                                            {req.location && <span className="flex items-center gap-1"><MapPin size={12} />{req.location}</span>}
+                                            {req.budget && <span className="font-semibold text-green-600">{Number(req.budget).toLocaleString()} RWF</span>}
+                                        </div>
+                                    </div>
+                                    {req.status === 'Accepted' && (
+                                        <div className="px-5 py-4 border-t border-gray-100">
+                                            <button
+                                                onClick={() => handleHireStatusUpdate(req._id, 'Completed')}
+                                                disabled={updatingHire === req._id}
+                                                className="w-full py-2 rounded-xl bg-green-600 hover:bg-green-700 text-white font-bold text-xs transition disabled:opacity-50"
+                                            >
+                                                {updatingHire === req._id ? 'Updating...' : '✓ Mark as Completed'}
+                                            </button>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* Incoming Hire Requests — workers & admins */}
+            {(isWorker || isAdmin) && (
+                <div className="mb-12">
+                    <div className="flex items-center gap-3 mb-6">
+                        <Inbox size={22} className="text-emerald-600" />
+                        <h2 className="text-2xl font-bold text-gray-900">Incoming Hire Requests</h2>
+                        {receivedHireRequests.filter(r => r.status === 'Pending').length > 0 && (
+                            <span className="bg-emerald-100 text-emerald-700 font-bold text-xs px-2.5 py-1 rounded-full border border-emerald-200">
+                                {receivedHireRequests.filter(r => r.status === 'Pending').length} pending
+                            </span>
+                        )}
+                    </div>
+
+                    {loadingHire ? (
+                        <div className="text-center py-12 text-gray-400 font-medium">Loading hire requests...</div>
+                    ) : receivedHireRequests.length === 0 ? (
+                        <div className="bg-white border border-dashed border-gray-200 rounded-2xl py-14 text-center">
+                            <Inbox size={36} className="mx-auto text-gray-300 mb-3" />
+                            <p className="text-gray-500 font-medium">No hire requests received yet.</p>
+                            <p className="text-gray-400 text-sm mt-1">Keep your profile updated to attract employers.</p>
+                        </div>
+                    ) : (
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            {receivedHireRequests.map(req => (
+                                <div key={req._id} className="bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-md transition-all flex flex-col">
+                                    <div className="p-5 flex-grow">
+                                        <div className="flex items-start justify-between gap-2 mb-3">
+                                            <span className={`text-xs font-bold px-2.5 py-1 rounded-full border flex items-center ${hireStatusColors[req.status]}`}>
+                                                {hireStatusIcon[req.status]}{req.status}
+                                            </span>
+                                            <span className="text-xs text-gray-400">{new Date(req.createdAt).toLocaleDateString()}</span>
+                                        </div>
+                                        <h3 className="font-bold text-gray-900 text-base mb-1 leading-tight">{req.title}</h3>
+                                        <p className="text-xs text-emerald-600 font-semibold mb-2">
+                                            From: {req.employer?.name || 'Employer'}
+                                        </p>
+                                        <p className="text-gray-500 text-sm line-clamp-2 mb-3">{req.description}</p>
+                                        <div className="flex flex-wrap items-center gap-3 text-xs text-gray-400">
+                                            {req.location && <span className="flex items-center gap-1"><MapPin size={12} />{req.location}</span>}
+                                            {req.budget && <span className="font-semibold text-green-600">{Number(req.budget).toLocaleString()} RWF</span>}
+                                        </div>
+                                    </div>
+                                    {req.status === 'Pending' && (
+                                        <div className="px-5 py-4 border-t border-gray-100 flex gap-2">
+                                            <button
+                                                onClick={() => handleHireStatusUpdate(req._id, 'Declined')}
+                                                disabled={updatingHire === req._id}
+                                                className="flex-1 py-2 rounded-xl border border-gray-200 bg-gray-50 hover:bg-red-50 hover:border-red-200 hover:text-red-600 text-gray-600 font-bold text-xs transition disabled:opacity-50"
+                                            >
+                                                Decline
+                                            </button>
+                                            <button
+                                                onClick={() => handleHireStatusUpdate(req._id, 'Accepted')}
+                                                disabled={updatingHire === req._id}
+                                                className="flex-1 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs transition disabled:opacity-50"
+                                            >
+                                                {updatingHire === req._id ? 'Updating...' : 'Accept'}
+                                            </button>
+                                        </div>
+                                    )}
                                 </div>
                             ))}
                         </div>
